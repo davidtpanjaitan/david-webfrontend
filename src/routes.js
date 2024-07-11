@@ -1,10 +1,10 @@
 // Material Dashboard 2 React layouts
-import Dashboard from "./layouts/dashboard/dashboard";
-import ListPanen from "./layouts/panen/admin/listPanen";
-import ListProduksi from "./layouts/produksi/admin/listProduksi";
-import ScanQr from "./layouts/scanQr/scanQr";
-import ListUser from "./layouts/manajemenUser/listUser";
-import ListLokasi from "./layouts/manajemenLokasi/listLokasi";
+import Dashboard from "./layouts/dashboard/Dashboard";
+import ListPanen from "./layouts/panen/admin/ListPanen";
+import ListProduksi from "./layouts/produksi/admin/ListProduksi";
+import ScanQr from "./layouts/scanQr/ScanQr";
+import ListUser from "./layouts/manajemenUser/ListUser";
+import ListLokasi from "./layouts/manajemenLokasi/ListLokasi";
 
 // @mui icons
 import Icon from "@mui/material/Icon";

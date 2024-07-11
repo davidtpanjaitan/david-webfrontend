@@ -1,4 +1,5 @@
-
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -19,6 +20,17 @@ import Footer from "../../examples/Footer";
 import DataTable from "../../examples/Tables/DataTable";
 
 function ListLokasi() {
+    const baseUrl = "https://david-test-webapp.azurewebsites.net/api";
+    const [listLokasi, setListLokasi] = useState([]);
+
+    useEffect(() => {
+        axios
+          .get(`${baseUrl}/lokasi`)
+          .then((res) => {
+            setListLokasi(res.data);
+          })
+          .catch((err) => console.log(err));
+      }, [listLokasi]);
 
     const handleButtonClick = () => {
         console.log("Button clicked!");
