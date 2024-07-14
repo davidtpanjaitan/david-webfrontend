@@ -15,6 +15,9 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
+import { useState, useEffect } from "react";
+import axios from "axios";
+
 // Material Dashboard 2 React components
 import MDBox from "../../../../components/MDBox";
 import MDTypography from "../../../../components/MDTypography";
@@ -27,6 +30,18 @@ import team3 from "../../../../assets/images/team-3.jpg";
 import team4 from "../../../../assets/images/team-4.jpg";
 
 export default function data() {
+  // const baseUrl = "https://david-test-webapp.azurewebsites.net/api";
+  // const [listLokasi, setListLokasi] = useState([]);
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`${baseUrl}/lokasi`)
+  //     .then((res) => {
+  //       setListLokasi(res.data);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, [listLokasi]);
+
   const Author = ({ image, name, email }) => (
     <MDBox display="flex" alignItems="center" lineHeight={1}>
       <MDAvatar src={image} name={name} size="sm" />

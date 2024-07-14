@@ -19,6 +19,9 @@ import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import Footer from "../../examples/Footer";
 import DataTable from "../../examples/Tables/DataTable";
 
+// Data
+import listLokasiTable from "./data/listLokasiTable";
+
 function ListLokasi() {
     const baseUrl = "https://david-test-webapp.azurewebsites.net/api";
     const [listLokasi, setListLokasi] = useState([]);
@@ -32,27 +35,40 @@ function ListLokasi() {
           .catch((err) => console.log(err));
       }, [listLokasi]);
 
+    const { columns, rows } = listLokasiTable(listLokasi);
+
     const handleButtonClick = () => {
         console.log("Button clicked!");
     };
 
     return (
         <DashboardLayout>
-        <DashboardNavbar />
-        <MDBox pt={3} pb={3}>
-            <Grid item xs={12} container justifyContent="center">
-            <MDTypography variant="h2">Daftar Lokasi Panen</MDTypography>
-            </Grid>
-            <Grid item xs={12} container justifyContent="center" spacing={2} pt={3} pb={3}>
-            <Grid item>
-                <MDButton variant="gradient" color="primary" onClick={handleButtonClick}>
-                + Tambah Lokasi
-                </MDButton>
-            </Grid>
-            </Grid>
-            
-            
-        </MDBox>
+            <DashboardNavbar />
+            <MDBox pt={3} pb={3}>
+                <Grid item xs={12} container justifyContent="center">
+                    <MDTypography variant="h2">Daftar Lokasi Panen</MDTypography>
+                </Grid>
+                <Grid item xs={12} container justifyContent="center" spacing={2} pt={3} pb={3}>
+                    <Grid item>
+                        <MDButton variant="gradient" color="primary" onClick={handleButtonClick}>
+                        + Tambah Lokasi
+                        </MDButton>
+                    </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                    <Card>
+                        <MDBox pt={3}>
+                            <DataTable
+                                table={{ columns, rows }}
+                                isSorted={false}
+                                entriesPerPage={false}
+                                showTotalEntries={false}
+                                noEndBorder
+                            />
+                        </MDBox>
+                    </Card>
+                </Grid>
+            </MDBox>
         {/* <Footer /> */}
         </DashboardLayout>
     );
