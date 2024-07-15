@@ -91,39 +91,41 @@ function AddLokasi() {
               <MDBox p={3}>
                 <MDTypography variant="h4" align="center">Tambah Lokasi</MDTypography>
               </MDBox>
-              <MDBox pt={2} px={5} align="center">
-                <Grid item xs={12} md={9} mb={2}>
-                  {/* <MDTypography variant="caption">Tambah Lokasi</MDTypography> */}
-                  <MDInput 
-                    name="namaLokasi"
-                    label="Nama Lokasi" 
-                    onChange={handleChange} 
-                    value={formData.namaLokasi} 
-                    fullWidth />
-                </Grid>
-                <Grid item xs={12} md={9} mb={2}>
-                  <MDInput 
-                    name="namaPetani"
-                    label="Nama Petani" 
-                    value={formData.namaPetani} 
-                    onChange={handleChange} 
-                    fullWidth />
-                </Grid>
-                <Grid item xs={12} md={9} mb={2}>
-                  <MDInput 
-                    name="koordinat"
-                    label="Koordinat Lokasi" 
-                    value={formData.koordinat} 
-                    onChange={handleChange} 
-                    fullWidth />
-                </Grid>
-                <Grid item xs={12} md={9} mb={2}>
-                  <MDInput 
-                    name="lokasiLengkap"
-                    label="Lokasi Lengkap" 
-                    value={formData.lokasiLengkap} 
-                    onChange={handleChange} 
-                    fullWidth />
+              <MDBox pt={2} px={5}>
+                <Grid container spacing={3} justifyContent='center'>
+                  <Grid item xs={12} md={9}>
+                    {/* <MDTypography variant="caption">Tambah Lokasi</MDTypography> */}
+                    <MDInput 
+                      name="namaLokasi"
+                      label="Nama Lokasi" 
+                      onChange={handleChange} 
+                      value={formData.namaLokasi} 
+                      fullWidth />
+                  </Grid>
+                  <Grid item xs={12} md={9}>
+                    <MDInput 
+                      name="namaPetani"
+                      label="Nama Petani" 
+                      value={formData.namaPetani} 
+                      onChange={handleChange} 
+                      fullWidth />
+                  </Grid>
+                  <Grid item xs={12} md={9}>
+                    <MDInput 
+                      name="koordinat"
+                      label="Koordinat Lokasi" 
+                      value={formData.koordinat} 
+                      onChange={handleChange} 
+                      fullWidth />
+                  </Grid>
+                  <Grid item xs={12} md={9}>
+                    <MDInput 
+                      name="lokasiLengkap"
+                      label="Lokasi Lengkap" 
+                      value={formData.lokasiLengkap} 
+                      onChange={handleChange} 
+                      fullWidth />
+                  </Grid>
                 </Grid>
               </MDBox>
               <MDBox p={3} display="flex" justifyContent="center">

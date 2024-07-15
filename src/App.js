@@ -22,8 +22,10 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "./
 // Images
 import brandWhite from "./assets/images/logo-ct.png";
 
-// Pages
+// Pages Lokasi
 import AddLokasi from "./layouts/manajemenLokasi/AddLokasi";
+import DetailLokasi from "./layouts/manajemenLokasi/DetailLokasi";
+import EditLokasi from "./layouts/manajemenLokasi/EditLokasi";
 
 // import for routes
 // import LoginPage from "./pages/LoginPage"
@@ -102,6 +104,8 @@ function App() {
         {getRoutes(routes)}
         <Route path="*" element={<Navigate to="/dashboard" />} />
         <Route path="/tambah-lokasi" element={<AddLokasi />} />
+        <Route path="/lokasi/:id" element={<DetailLokasi />} />
+        <Route path="/lokasi/:id/ubah" element={<EditLokasi />} />
       </Routes>
     </ThemeProvider>
   );

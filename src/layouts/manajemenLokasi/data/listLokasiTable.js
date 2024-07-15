@@ -14,6 +14,8 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
+import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
 // @mui material components
 import Icon from "@mui/material/Icon";
@@ -21,6 +23,7 @@ import Icon from "@mui/material/Icon";
 // Material Dashboard 2 React components
 import MDBox from "../../../components/MDBox";
 import MDTypography from "../../../components/MDTypography";
+import MDButton from "../../../components/MDButton";
 import MDAvatar from "../../../components/MDAvatar";
 import MDBadge from "../../../components/MDBadge";
 
@@ -29,71 +32,40 @@ import team2 from "../../../assets/images/team-2.jpg";
 import team3 from "../../../assets/images/team-3.jpg";
 import team4 from "../../../assets/images/team-4.jpg";
 
-export default function listLokasiTable( data ) {
-  // const baseUrl = "https://david-test-webapp.azurewebsites.net/api";
-  // const [listLokasi, setListLokasi] = useState([]);
+export default function useLokasiTable( data ) {
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`${baseUrl}/lokasi`)
-  //     .then((res) => {
-  //       setListLokasi(res.data);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, [listLokasi]);
-
-
-  // const Author = ({ image, name, email }) => (
-  //   <MDBox display="flex" alignItems="center" lineHeight={1}>
-  //     <MDAvatar src={image} name={name} size="sm" />
-  //     <MDBox ml={2} lineHeight={1}>
-  //       <MDTypography display="block" variant="button" fontWeight="medium">
-  //         {name}
-  //       </MDTypography>
-  //       <MDTypography variant="caption">{email}</MDTypography>
-  //     </MDBox>
-  //   </MDBox>
-  // );
-
-  // const Job = ({ title, description }) => (
-  //   <MDBox lineHeight={1} textAlign="left">
-  //     <MDTypography display="block" variant="caption" color="text" fontWeight="medium">
-  //       {title}
-  //     </MDTypography>
-  //     <MDTypography variant="caption">{description}</MDTypography>
-  //   </MDBox>
-  // );
-
-    const columns = [
-      { Header: "nama lokasi", accessor: "nama_lokasi", width: "45%", align: "center" },
+    const columns = useMemo(() => [
+      { Header: "nama lokasi", accessor: "nama_lokasi", align: "center" },
       { Header: "nama petani", accessor: "nama_petani", align: "center" },
       { Header: "koordinat", accessor: "koordinat", align: "center" },
       { Header: "action", accessor: "action", align: "center" },
-    ];
+    ], []);
 
-    const rows = data.map((lokasi) => ({
+    const rows = useMemo(() => data.map((lokasi) => ({
       nama_lokasi: (
-        <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
+        <MDTypography variant="subtitle2" color="text" fontWeight="medium">
           {lokasi.namaLokasi}
         </MDTypography>
       ),
       nama_petani: (
-        <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
+        <MDTypography variant="subtitle2" color="text" fontWeight="medium">
           {lokasi.namaPetani}
         </MDTypography>
       ),
       koordinat: (
-        <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
+        <MDTypography variant="subtitle2" color="text" fontWeight="medium">
           {lokasi.koordinat}
         </MDTypography>
       ),
       action: (
         <MDTypography component="a" href="#" color="text">
-          <Icon>more_vert</Icon>
+          <MDButton variant="outlined" color="info" size="small" onClick={() => navigate(`/lokasi/${lokasi.id}`)}>
+            Detail
+          </MDButton>
         </MDTypography>
       ),
-    }));
+    })), [data, navigate]);
   
     return { columns, rows };
-  
 }

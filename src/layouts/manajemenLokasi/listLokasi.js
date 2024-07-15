@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -20,10 +21,11 @@ import Footer from "../../examples/Footer";
 import DataTable from "../../examples/Tables/DataTable";
 
 // Data
-import listLokasiTable from "./data/listLokasiTable";
+import useLokasiTable from "./data/listLokasiTable";
 
 function ListLokasi() {
     const baseUrl = "https://david-test-webapp.azurewebsites.net/api";
+    const navigate = useNavigate();
     const [listLokasi, setListLokasi] = useState([]);
 
     useEffect(() => {
@@ -35,10 +37,10 @@ function ListLokasi() {
           .catch((err) => console.log(err));
       }, [listLokasi]);
 
-    const { columns, rows } = listLokasiTable(listLokasi);
+    const { columns, rows } = useLokasiTable(listLokasi);
 
-    const handleButtonClick = () => {
-        console.log("Button clicked!");
+    const handleButtonTambahLokasi = () => {
+        navigate("/tambah-lokasi")
     };
 
     return (
@@ -50,8 +52,8 @@ function ListLokasi() {
                 </Grid>
                 <Grid item xs={12} container justifyContent="center" spacing={2} pt={3} pb={3}>
                     <Grid item>
-                        <MDButton variant="gradient" color="primary" onClick={handleButtonClick}>
-                        + Tambah Lokasi
+                        <MDButton variant="gradient" color="primary" onClick={handleButtonTambahLokasi}>
+                            + Tambah Lokasi
                         </MDButton>
                     </Grid>
                 </Grid>
@@ -60,9 +62,10 @@ function ListLokasi() {
                         <MDBox pt={3}>
                             <DataTable
                                 table={{ columns, rows }}
+                                canSearch={true}
                                 isSorted={false}
-                                entriesPerPage={false}
-                                showTotalEntries={false}
+                                entriesPerPage={true}
+                                showTotalEntries={true}
                                 noEndBorder
                             />
                         </MDBox>
