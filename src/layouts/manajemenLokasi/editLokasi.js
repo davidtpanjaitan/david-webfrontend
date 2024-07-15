@@ -30,6 +30,7 @@ function EditLokasi() {
 
   const [showModal, setShowModal] = useState(false);
   const toggleModal = () => setShowModal(!showModal);
+  const [errors, setErrors] = useState({});
 
   const [formData, setFormData] = useState({
     namaLokasi: '',
@@ -62,11 +63,34 @@ function EditLokasi() {
   const handleButtonSimpan = (e) => {
     e.preventDefault();
 
-    // if (validateForm()) {
+    if (validateForm()) {
       setShowModal(true);
-    // } else {
-    //   console.log('Form validation failed');
-    // } 
+    } else {
+      console.log('Form validation failed');
+    } 
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.namaLokasi.trim()) {
+      newErrors.namaLokasi = "Nama lokasi tidak boleh kosong";
+    }
+
+    if (!formData.namaPetani.trim()) {
+      newErrors.namaPetani = "Nama petani tidak boleh kosong";
+    }
+
+    if (!formData.koordinat.trim()) {
+      newErrors.koordinat = "Koordinat tidak boleh kosong";
+    }
+
+    if (!formData.lokasiLengkap.trim()) {
+      newErrors.lokasiLengkap = "Lokasi lengkap tidak boleh kosong";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const confirmSubmit = async (e) => {
@@ -111,6 +135,11 @@ function EditLokasi() {
                       onChange={handleChange} 
                       value={formData.namaLokasi} 
                       fullWidth />
+                      {errors.namaLokasi && (
+                        <MDTypography variant="caption" color="error" fontWeight="regular">
+                            {errors.namaLokasi}
+                        </MDTypography>
+                      )}
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <MDInput 
@@ -119,6 +148,11 @@ function EditLokasi() {
                       value={formData.namaPetani} 
                       onChange={handleChange} 
                       fullWidth />
+                      {errors.namaPetani && (
+                        <MDTypography variant="caption" color="error" fontWeight="regular">
+                          {errors.namaPetani}
+                        </MDTypography>
+                      )}
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <MDInput 
@@ -127,6 +161,11 @@ function EditLokasi() {
                       value={formData.koordinat} 
                       onChange={handleChange} 
                       fullWidth />
+                      {errors.koordinat && (
+                        <MDTypography variant="caption" color="error" fontWeight="regular">
+                          {errors.koordinat}
+                        </MDTypography>
+                      )}
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <MDInput 
@@ -135,6 +174,11 @@ function EditLokasi() {
                       value={formData.lokasiLengkap} 
                       onChange={handleChange} 
                       fullWidth />
+                      {errors.lokasiLengkap && (
+                        <MDTypography variant="caption" color="error" fontWeight="regular">
+                          {errors.lokasiLengkap}
+                        </MDTypography>
+                      )}
                   </Grid>
                 </Grid>
               </MDBox>
