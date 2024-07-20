@@ -58,14 +58,6 @@ const routes = [
     route: "/user",
     component: <ListUser />,
   },
-  {
-    type: "collapse",
-    name: "Logout",
-    key: "logout",
-    icon: <Icon fontSize="small">logout</Icon>,
-    // route: "logout",
-    // component: <SignIn />,
-  },
 ];
 
 export default routes;

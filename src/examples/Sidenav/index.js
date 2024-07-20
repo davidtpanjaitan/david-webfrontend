@@ -39,6 +39,8 @@ import SidenavCollapse from "./SidenavCollapse";
 import SidenavRoot from "./SidenavRoot";
 import sidenavLogoLabel from "./styles/sidenav";
 
+import { useAuth } from "../../layouts/auth/AuthProvider";
+
 // Material Dashboard 2 React context
 import {
   useMaterialUIController,
@@ -52,6 +54,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const { miniSidenav, transparentSidenav, whiteSidenav, darkMode, sidenavColor } = controller;
   const location = useLocation();
   const collapseName = location.pathname.replace("/", "");
+  const auth = useAuth();
 
   let textColor = "white";
 
@@ -179,6 +182,23 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         }
       />
       <List>{renderRoutes}</List>
+      <Divider
+        light={
+          (!darkMode && !whiteSidenav && !transparentSidenav) ||
+          (darkMode && !transparentSidenav && whiteSidenav)
+        }
+      />
+      <Link
+        onClick={() => auth.logoutAction()}
+        // target="_blank"
+        // rel="noreferrer"
+        sx={{ textDecoration: "none" }}
+        >
+          <SidenavCollapse
+            name="Logout"
+            icon={<Icon>logout</Icon>}
+          />
+        </Link>
     </SidenavRoot>
   );
 }
