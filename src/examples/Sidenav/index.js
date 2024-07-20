@@ -99,13 +99,13 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           <SidenavCollapse
             name={name}
             icon={icon}
-            active={key === collapseName}
+            active={collapseName.includes(key)}
             noCollapse={noCollapse}
           />
         </Link>
       ) : (
         <NavLink key={key} to={route}>
-          <SidenavCollapse name={name} icon={icon} active={key === collapseName} />
+          <SidenavCollapse name={name} icon={icon} active={collapseName.includes(key)} />
         </NavLink>
       );
     } else if (type === "title") {

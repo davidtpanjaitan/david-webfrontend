@@ -53,9 +53,9 @@ const routes = [
   {
     type: "collapse",
     name: "Manajemen User",
-    key: "users",
+    key: "user",
     icon: <Icon fontSize="small">person</Icon>,
-    route: "/users",
+    route: "/user",
     component: <ListUser />,
   },
   {

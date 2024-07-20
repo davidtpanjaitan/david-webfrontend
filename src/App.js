@@ -27,9 +27,13 @@ import AddLokasi from "./layouts/manajemenLokasi/AddLokasi";
 import DetailLokasi from "./layouts/manajemenLokasi/DetailLokasi";
 import EditLokasi from "./layouts/manajemenLokasi/EditLokasi";
 
-// import for routes
-// import LoginPage from "./pages/LoginPage"
-// import HomePageAdmin from "./pages/homepages/HomePageAdmin"
+// Pages Manajemen User
+import AddUser from "./layouts/manajemenUser/AddUser";
+import EditUser from "./layouts/manajemenUser/EditUser";
+import DetailUser from "./layouts/manajemenUser/DetailUser";
+import ChangePassword from "./layouts/manajemenUser/ChangePassword";
+
+
 
 function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -103,9 +107,14 @@ function App() {
       <Routes>
         {getRoutes(routes)}
         <Route path="*" element={<Navigate to="/dashboard" />} />
-        <Route path="/tambah-lokasi" element={<AddLokasi />} />
+        <Route path="/lokasi/tambah" element={<AddLokasi />} />
         <Route path="/lokasi/:id" element={<DetailLokasi />} />
         <Route path="/lokasi/:id/ubah" element={<EditLokasi />} />
+
+        <Route path="/user/tambah" element={<AddUser />} />
+        <Route path="/user/:id" element={<DetailUser />} />
+        <Route path="/user/:id/ubah" element={<EditUser />} />
+        <Route path="/user/:id/ubah-password" element={<ChangePassword />} />
       </Routes>
     </ThemeProvider>
   );
