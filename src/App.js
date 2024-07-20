@@ -22,6 +22,10 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "./
 // Images
 import brandWhite from "./assets/images/logo-ct.png";
 
+// Page Login
+import Login from "./layouts/auth/Login";
+import AuthProvider from "./layouts/auth/AuthProvider";
+
 // Pages Lokasi
 import AddLokasi from "./layouts/manajemenLokasi/AddLokasi";
 import DetailLokasi from "./layouts/manajemenLokasi/DetailLokasi";
@@ -33,7 +37,8 @@ import EditUser from "./layouts/manajemenUser/EditUser";
 import DetailUser from "./layouts/manajemenUser/DetailUser";
 import ChangePassword from "./layouts/manajemenUser/ChangePassword";
 
-
+// Pages Panen
+import GenerateQrPanen from "./layouts/panen/admin/GenerateQrPanen";
 
 function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -89,6 +94,7 @@ function App() {
     });
 
   return (
+    <AuthProvider>
     <ThemeProvider theme={theme}>
       <CssBaseline />
       {layout === "dashboard" && (
@@ -106,7 +112,15 @@ function App() {
       {layout === "vr"}
       <Routes>
         {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
+
+        { localStorage.getItem("token")? (
+          <Route path="*" element={<Navigate to="/dashboard" />} />
+        ) : (
+          <Route path="*" element={<Navigate to="/login" />} />
+        )}
+        
+        <Route path="/login" element={<Login />} />
+
         <Route path="/lokasi/tambah" element={<AddLokasi />} />
         <Route path="/lokasi/:id" element={<DetailLokasi />} />
         <Route path="/lokasi/:id/ubah" element={<EditLokasi />} />
@@ -115,8 +129,11 @@ function App() {
         <Route path="/user/:id" element={<DetailUser />} />
         <Route path="/user/:id/ubah" element={<EditUser />} />
         <Route path="/user/:id/ubah-password" element={<ChangePassword />} />
+
+        <Route path="/panen/generate-qr" element={<GenerateQrPanen />} />
       </Routes>
     </ThemeProvider>
+    </AuthProvider>
   );
 }
 
