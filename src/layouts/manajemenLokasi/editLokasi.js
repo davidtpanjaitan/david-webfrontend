@@ -74,19 +74,19 @@ function EditLokasi() {
     const newErrors = {};
 
     if (!formData.namaLokasi.trim()) {
-      newErrors.namaLokasi = "Nama lokasi tidak boleh kosong";
+      newErrors.namaLokasi = "Nama lokasi kosong";
     }
 
     if (!formData.namaPetani.trim()) {
-      newErrors.namaPetani = "Nama petani tidak boleh kosong";
+      newErrors.namaPetani = "Nama petani kosong";
     }
 
     if (!formData.koordinat.trim()) {
-      newErrors.koordinat = "Koordinat tidak boleh kosong";
+      newErrors.koordinat = "Koordinat kosong";
     }
 
     if (!formData.lokasiLengkap.trim()) {
-      newErrors.lokasiLengkap = "Lokasi lengkap tidak boleh kosong";
+      newErrors.lokasiLengkap = "Lokasi lengkap kosong";
     }
 
     setErrors(newErrors);
@@ -130,55 +130,45 @@ function EditLokasi() {
                   <Grid item xs={12} md={9}>
                     {/* <MDTypography variant="caption">Tambah Lokasi</MDTypography> */}
                     <MDInput 
+                      error={errors.namaLokasi}
+                      helperText={errors.namaLokasi ? "Nama lokasi tidak boleh kosong" : ""}
                       name="namaLokasi"
                       label="Nama Lokasi" 
                       onChange={handleChange} 
                       value={formData.namaLokasi} 
                       fullWidth />
-                      {errors.namaLokasi && (
-                        <MDTypography variant="caption" color="error" fontWeight="regular">
-                            {errors.namaLokasi}
-                        </MDTypography>
-                      )}
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <MDInput 
+                      error={errors.namaPetani}
+                      helperText={errors.namaPetani ? "Nama petani tidak boleh kosong" : ""}
                       name="namaPetani"
                       label="Nama Petani" 
                       value={formData.namaPetani} 
                       onChange={handleChange} 
                       fullWidth />
-                      {errors.namaPetani && (
-                        <MDTypography variant="caption" color="error" fontWeight="regular">
-                          {errors.namaPetani}
-                        </MDTypography>
-                      )}
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <MDInput 
+                      error={errors.koordinat}
+                      helperText={errors.koordinat ? "Koordinat tidak boleh kosong" : ""}
                       name="koordinat"
                       label="Koordinat Lokasi" 
                       value={formData.koordinat} 
                       onChange={handleChange} 
                       fullWidth />
-                      {errors.koordinat && (
-                        <MDTypography variant="caption" color="error" fontWeight="regular">
-                          {errors.koordinat}
-                        </MDTypography>
-                      )}
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <MDInput 
+                      error={errors.lokasiLengkap}
+                      helperText={errors.lokasiLengkap ? "Lokasi lengkap tidak boleh kosong" : ""}
                       name="lokasiLengkap"
                       label="Lokasi Lengkap" 
                       value={formData.lokasiLengkap} 
                       onChange={handleChange} 
+                      multiline
+                      rows={4} 
                       fullWidth />
-                      {errors.lokasiLengkap && (
-                        <MDTypography variant="caption" color="error" fontWeight="regular">
-                          {errors.lokasiLengkap}
-                        </MDTypography>
-                      )}
                   </Grid>
                 </Grid>
               </MDBox>

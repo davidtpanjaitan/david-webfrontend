@@ -40,7 +40,7 @@ function ListLokasi() {
     const { columns, rows } = useLokasiTable(listLokasi);
 
     const handleButtonTambahLokasi = () => {
-        navigate("/tambah-lokasi")
+        navigate("/lokasi/tambah")
     };
 
     return (
