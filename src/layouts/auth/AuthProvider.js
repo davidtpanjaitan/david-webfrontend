@@ -19,13 +19,16 @@ const AuthProvider = ({ children }) => {
       });
 
       if (response.data) {
-        setUser(response.data.username);
-        setRole(response.data.role);
+        setUser(response.data.user);
+        setRole(response.data.user.role);
         setToken(response.data.token);
-        // TODO: GANTI USERNAME JADI USER
-        localStorage.setItem("user", response.data.username);
-        localStorage.setItem("role", response.data.role);
+      
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        console.log(localStorage.getItem("user"));
+        localStorage.setItem("role", response.data.user.role);
+        console.log(localStorage.getItem("role"));
         localStorage.setItem("token", response.data.token);
+        console.log(localStorage.getItem("token"));
       
         navigate("/dashboard");
         return;
@@ -43,6 +46,7 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem("user");
     localStorage.removeItem("role");
     localStorage.removeItem("token");
+  
     navigate("/login");
   };
 
