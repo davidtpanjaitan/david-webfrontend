@@ -39,6 +39,11 @@ import ChangePassword from "./layouts/manajemenUser/ChangePassword";
 
 // Pages Panen
 import GenerateQrPanen from "./layouts/panen/admin/GenerateQrPanen";
+import DetailPanen from "./layouts/panen/admin/DetailPanen";
+import IsiDataPanen from "./layouts/panen/lapangan/IsiDataPanen";
+
+// Pages Produksi
+import GenerateQrProduksi from "./layouts/produksi/admin/GenerateQrProduksi";
 
 function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -121,6 +126,7 @@ function App() {
         
         <Route path="/login" element={<Login />} />
 
+        {/* ADMIN */}
         <Route path="/lokasi/tambah" element={<AddLokasi />} />
         <Route path="/lokasi/:id" element={<DetailLokasi />} />
         <Route path="/lokasi/:id/ubah" element={<EditLokasi />} />
@@ -131,6 +137,12 @@ function App() {
         <Route path="/user/:id/ubah-password" element={<ChangePassword />} />
 
         <Route path="/panen/generate-qr" element={<GenerateQrPanen />} />
+        <Route path="/panen/:id" element={<DetailPanen />} />
+
+        <Route path="/produksi/generate-qr" element={<GenerateQrProduksi />} />
+
+        {/* PETUGAS LAPANGAN/LOKASI */}
+        <Route path="/panen/:id/isi-data" element={<IsiDataPanen />} />
       </Routes>
     </ThemeProvider>
     </AuthProvider>
