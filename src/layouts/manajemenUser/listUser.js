@@ -28,6 +28,9 @@ function ListUser() {
     const navigate = useNavigate();
     const [listUser, setListUser] = useState([]);
 
+    const token = localStorage.getItem("token");
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
     useEffect(() => {
         axios
           .get(`${baseUrl}/user`)

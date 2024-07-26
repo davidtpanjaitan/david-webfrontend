@@ -33,6 +33,9 @@ function AddUser() {
   const toggleModal = () => setShowModal(!showModal);
   const [errors, setErrors] = useState({});
 
+  const token = localStorage.getItem("token");
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
   const [formData, setFormData] = useState({
     employeeId: '',
     username: '',

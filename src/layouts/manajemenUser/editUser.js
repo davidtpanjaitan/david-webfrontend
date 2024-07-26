@@ -34,11 +34,15 @@ function EditUser() {
   const toggleModal = () => setShowModal(!showModal);
   const [errors, setErrors] = useState({});
 
+  const token = localStorage.getItem("token");
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
   const [formData, setFormData] = useState({
     employeeId: '',
     username: '',
     role: '',
     name: '',
+    password: '',
   });
 
   useEffect(() => {
@@ -106,6 +110,7 @@ function EditUser() {
         username: formData.username,
         role: formData.role,
         name: formData.name,
+        password: formData.name,
       });
       console.log("User berhasil disimpan:", response.data);
       navigate('/user');

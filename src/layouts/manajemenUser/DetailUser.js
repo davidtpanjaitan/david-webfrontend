@@ -32,6 +32,9 @@ function DetailLokasi() {
   const [showModal, setShowModal] = useState(false);
   const toggleModal = () => setShowModal(!showModal);
 
+  const token = localStorage.getItem("token");
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
   useEffect(() => {
     axios
       .get(`${baseUrl}/user/${id}`)
@@ -40,21 +43,6 @@ function DetailLokasi() {
       })
       .catch((err) => console.log(err));
   }, []);
-
-  const [formData, setFormData] = useState({
-    namaLokasi: '',
-    namaPetani: '',
-    koordinat: '',
-    lokasiLengkap: '',
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
 
   const handleButtonKembali = () => {
     navigate(-1);
@@ -77,7 +65,6 @@ function DetailLokasi() {
   const confirmSubmit = async (e) => {
     setShowModal(false);
     // setIsLoading(true);
-    console.log(formData);
 
     try {
       const response = await axios.delete(`${baseUrl}/user/${id}`);
