@@ -41,9 +41,12 @@ import ChangePassword from "./layouts/manajemenUser/ChangePassword";
 import GenerateQrPanen from "./layouts/panen/admin/GenerateQrPanen";
 import DetailPanen from "./layouts/panen/admin/DetailPanen";
 import IsiDataPanen from "./layouts/panen/lapangan/IsiDataPanen";
+import KonfirmasiLapangan from "./layouts/panen/picLapangan/KonfirmasiLapangan";
+import KonfirmasiWarehouse from "./layouts/panen/warehouse/KonfirmasiWarehouse";
 
 // Pages Produksi
 import GenerateQrProduksi from "./layouts/produksi/admin/GenerateQrProduksi";
+import IsiDataProduk from "./layouts/produksi/petugasProduksi/IsiDataProduk";
 
 function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -141,8 +144,17 @@ function App() {
 
         <Route path="/produksi/generate-qr" element={<GenerateQrProduksi />} />
 
-        {/* PETUGAS LAPANGAN/LOKASI */}
+        {/* PETUGAS LAPANGAN */}
         <Route path="/panen/:id/isi-data" element={<IsiDataPanen />} />
+
+        {/* PIC LAPANGAN */}
+        <Route path="/panen/:id/konfirmasi-lapangan" element={<KonfirmasiLapangan />} />
+
+        {/* PETUGAS WAREHOUSE */}
+        <Route path="/panen/:id/konfirmasi-warehouse" element={<KonfirmasiWarehouse />} />
+
+        {/* PETUGAS PRODUKSI */}
+        <Route path="/produksi/:id/isi-data" element={<IsiDataProduk />} />
       </Routes>
     </ThemeProvider>
     </AuthProvider>
