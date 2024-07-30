@@ -28,8 +28,41 @@ import MDInput from "../../../components/MDInput";
 import DashboardLayout from "../../../examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 import Footer from "../../../examples/Footer";
+import { styled } from '@mui/system';
 
-function IsiDataPanen() {
+const StyledSelect = styled(Select)(({ theme }) => ({
+  "&.Mui-disabled": {
+    color: theme.palette.text.primary,
+    backgroundColor: "#f0f2f5",
+    "& .MuiOutlinedInput-notchedOutline": {
+      borderColor: theme.palette.divider
+    },
+  },
+  "& .MuiSelect-select.Mui-disabled": {
+    color: theme.palette.text.primary, // Warna teks saat disabled
+  }
+}));
+
+const StyledDatePicker = styled(DatePicker)(({ theme }) => ({
+  "& .MuiInputBase-root.Mui-disabled": {
+    color: theme.palette.text.primary,
+    backgroundColor: "#f0f2f5", // Warna background abu-abu
+    "& .MuiInputBase-input.Mui-disabled": {
+      color: "#495057", // Warna teks saat disabled
+    },
+    "& .MuiOutlinedInput-notchedOutline": {
+    borderColor: theme.palette.divider, // Menggunakan warna border default
+  },
+  },
+  "& .MuiInputBase-input.Mui-disabled": {
+    color: "#495057", // Warna teks ketika disabled
+  },
+  // "& .MuiOutlinedInput-notchedOutline": {
+  //   borderColor: theme.palette.divider, // Menggunakan warna border default
+  // },
+}));
+
+function KonfirmasiLapangan() {
   const baseUrl = "https://david-test-webapp.azurewebsites.net/api";
   const { id } = useParams();
   const navigate = useNavigate();
@@ -39,19 +72,19 @@ function IsiDataPanen() {
 
   const [showModal, setShowModal] = useState(false);
   const toggleModal = () => setShowModal(!showModal);
-  const [errors, setErrors] = useState({});
 
   const [namaLokasi, setNamaLokasi] = useState('');
-  const [gambar, setGambar] = useState('');
-  const [isUploadGambarBaru, setIsUploadGambarBaru] = useState(false);
+  const [gambarPanenUrl, setGambarPanenUrl] = useState('');
   const [jenisMadu, setJenisMadu] = useState('');
   const [beratPanen, setBeratPanen] = useState('');
   const [tanggalPanen, setTanggalPanen] = useState('');
   const [status, setStatus] = useState('');
-
-  const petugasPanen = JSON.parse(localStorage.getItem("user"));
   const [idPetugasPanen, setIdPetugasPanen] = useState('');
   const [namaPetugasPanen, setNamaPetugasPanen] = useState('');
+
+  const approver = JSON.parse(localStorage.getItem("user"));
+  // const [idApprover, setIdApprover] = useState('');
+  // const [namaApprover, setNamaApprover] = useState('');
 
   // const [formData, setFormData] = useState({
   //   jenisMadu: '',
@@ -72,7 +105,7 @@ function IsiDataPanen() {
         setTanggalPanen(res.data.tanggalPanen);
         setIdPetugasPanen(res.data.idPetugasPanen);
         setNamaPetugasPanen(res.data.namaPetugasPanen);
-        setGambar(res.data.gambarPanenUrl);
+        setGambarPanenUrl(res.data.gambarPanenUrl);
         setStatus(res.data.status);
         setNamaLokasi(res.data.namaLokasi);
       })
@@ -97,89 +130,31 @@ function IsiDataPanen() {
   //   }
   // };
 
-  const handleUploadGambar = (e) => {
-    setGambar(e.target.files[0]);
-    setIsUploadGambarBaru(true);
-  }
-
-  const jsonToFd = async () => {
-    const fd = new FormData();
-    
-    console.log(gambar);
-    // console.log(formData);
-    console.log(tanggalPanen);
-
-    // fd.append('gambar', gambarPanenUrl);
-    // fd.append('jenisMadu', formData.jenisMadu);
-    // fd.append('beratPanen', formData.beratPanen);
-    // fd.append('tanggalPanen', tanggalPanen);
-    // fd.append('idPetugasPanen', petugasPanen.id);
-    // fd.append('namaPetugasPanen', petugasPanen.name);
-    fd.append('gambar', gambar);
-    fd.append('jenisMadu', jenisMadu);
-    fd.append('beratPanen', beratPanen);
-    fd.append('tanggalPanen', tanggalPanen);
-    fd.append('idPetugasPanen', petugasPanen.id);
-    fd.append('namaPetugasPanen', petugasPanen.name);
-
-    console.log(fd);
-    return fd;
-  }
 
   const handleButtonKembali = () => {
     navigate(-1);
   }
 
-  const handleButtonSimpan = (e) => {
+  const handleButtonKonfirmasi = (e) => {
     e.preventDefault();
 
-    if (validateForm()) {
-      setShowModal(true);
-    } else {
-      console.log('Form validation failed');
-    } 
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    // if (!formData.employeeId.trim()) {
-    //   newErrors.employeeId = "Nama lokasi tidak boleh kosong";
-    // }
-
-    // if (!formData.username.trim()) {
-    //   newErrors.username = "Nama petani tidak boleh kosong";
-    // }
-
-    // if (!formData.role.trim()) {
-    //   newErrors.role = "Koordinat tidak boleh kosong";
-    // }
-
-    // if (!formData.name.trim()) {
-    //   newErrors.name = "Nama tidak boleh kosong";
-    // }
-
-    // if (!formData.password.trim()) {
-    //   newErrors.password = "Lokasi lengkap tidak boleh kosong";
-    // }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setShowModal(true);
   };
 
   const confirmSubmit = async (e) => {
     setShowModal(false);
     // setIsLoading(true);
 
-    const fd = await jsonToFd();
-
+    console.log(approver.id);
+    console.log(approver.name);
     try {
-      const response = await axios.put(`${baseUrl}/panen/${id}/submit-lokasi`, fd, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log("Data panen berhasil disimpan:", response.data);
+      const response = await axios.put(`${baseUrl}/panen/${id}/approve-lokasi`, {
+        approve: true,
+        idApprover: approver.id,
+        namaApprover: approver.name,
+      }
+      );
+      console.log("Data panen berhasil di-approve:", response.data);
       navigate('/panen');
     } catch (error) {
       console.error('Error:', error);
@@ -192,12 +167,12 @@ function IsiDataPanen() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDBox mt={6} mb={3} component="form" method="post" onSubmit={handleButtonSimpan}>
+      <MDBox mt={6} mb={3} component="form" method="post" onSubmit={handleButtonKonfirmasi}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} lg={8}>
             <Card>
               <MDBox p={3}>
-                <MDTypography variant="h4" align="center">Data Panen</MDTypography>
+                <MDTypography variant="h4" align="center">Konfirmasi Data Panen</MDTypography>
               </MDBox>
               <MDBox pt={2} px={5}>
                 <Grid container spacing={3} justifyContent='center'>
@@ -221,9 +196,7 @@ function IsiDataPanen() {
                   {/* Berat */}
                   <Grid item xs={12} md={9}>
                     <MDInput 
-                      disabled={status === "PIC_APPROVED"}
-                      error={errors.beratPanen}
-                      helperText={errors.beratPanen ? "Berat tidak boleh kosong" : ""}
+                      disabled
                       name="beratPanen"
                       type="number"
                       label="Berat (kg)" 
@@ -236,10 +209,8 @@ function IsiDataPanen() {
                   <Grid item xs={12} md={9}>
                     <FormControl fullWidth>
                       <InputLabel id="jenis-label">Jenis Madu</InputLabel>
-                      <Select
-                        disabled={status === "PIC_APPROVED"}
-                        error={errors.role}
-                        // helperText={errors.role ? "Jenis madu belum dipilih" : ""}
+                      <StyledSelect
+                        disabled
                         labelId="jenis-label"
                         name="jenisMadu"
                         label="Jenis Madu"
@@ -255,15 +226,15 @@ function IsiDataPanen() {
                         <MenuItem value={"C"}>Madu C</MenuItem>
                         <MenuItem value={"D"}>Madu D</MenuItem>
                         <MenuItem value={"E"}>Madu E</MenuItem>
-                      </Select>
+                      </StyledSelect>
                     </FormControl>
                   </Grid>
                   {/* Tanggal Panen */}
                   <Grid item xs={12} md={9}>
                   <FormControl fullWidth>
                     <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
-                      <DatePicker 
-                        disabled={status === "PIC_APPROVED"}
+                      <StyledDatePicker 
+                        disabled
                         label="Tanggal Panen"
                         name="tanggalPanen"
                         // value={dayjs(formData.tanggalPanen)}
@@ -275,30 +246,26 @@ function IsiDataPanen() {
                   </Grid>
                   {/* Upload foto */}
                   <Grid item xs={12} md={9} display="grid">
-                    <MDTypography id="MDTypography" variant="caption">Foto</MDTypography>
-                    <MDInput 
-                      disabled={status === "PIC_APPROVED"}
+                    <MDTypography id="MDTypography" variant="body2" fontWeight="regular">Foto</MDTypography>
+                    {/* <MDInput 
+                      disabled
                       type="file"
                       multiple
                       accept="image/*"
                       name="gambarPanen"
-                      onChange={handleUploadGambar}
-                    />
-                    {isUploadGambarBaru? (
-                      <MDBox style={{ maxWidth: '100%', marginTop: '40px' }} align="center" >
-                        <img src={URL.createObjectURL(gambar)} style={{ width: '100%', height: 'auto', maxWidth: '100%' }} />
-                      </MDBox>
-                    ) : (
-                      <MDBox style={{ maxWidth: '100%', marginTop: '40px' }} align="center" >
-                        <img src={gambar} style={{ width: '80%', height: 'auto', maxWidth: '100%' }} />
-                      </MDBox>
+                      onChange={(e) => setGambarPanenUrl(e.target.files[0])}
+                    /> */}
+                    {gambarPanenUrl && (
+                    <MDBox style={{ maxWidth: '100%', marginTop: '10px' }}>
+                      <img src={gambarPanenUrl} style={{ width: '100%', height: 'auto', maxWidth: '100%' }} />
+                    </MDBox>
                     )}
                   </Grid>
                 </Grid>
               </MDBox>
               <MDBox p={3} display="flex" justifyContent="center">
                 <MDButton variant="gradient" color="secondary" style={{ marginRight: '10px' }} onClick={handleButtonKembali}>Kembali</MDButton>
-                <MDButton type="submit" variant="gradient" color="primary" style={{ marginLeft: '10px' }}>Simpan</MDButton>
+                <MDButton disabled={status === "PIC_APPROVED"} type="submit" variant="gradient" color="primary" style={{ marginLeft: '10px' }}>Konfirmasi</MDButton>
               </MDBox>
             </Card>
           </Grid>
@@ -323,7 +290,7 @@ function IsiDataPanen() {
               <Divider sx={{ my: 0 }} />
               <MDBox p={2} my={3}>
                 <MDTypography variant="body2" color="secondary" fontWeight="regular" align="center">
-                  Apakah Anda yakin untuk menyimpan user baru?
+                  Apakah Anda yakin untuk melakukan konfirmasi data panen?
                 </MDTypography>
               </MDBox>
               <Divider sx={{ my: 0 }} />
@@ -345,4 +312,4 @@ function IsiDataPanen() {
   );
 }
 
-export default IsiDataPanen;
+export default KonfirmasiLapangan;
