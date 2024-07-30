@@ -1,4 +1,4 @@
-
+import { useNavigate } from "react-router-dom";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -25,6 +25,11 @@ import projectsTableData from "./data/projectsTableData";
 function ListPanen() {
   const { columns, rows } = authorsTableData();
   const { columns: pColumns, rows: pRows } = projectsTableData();
+  const navigate = useNavigate();
+
+  const handleButtonGenerate = () => {
+    navigate("/panen/generate-qr");
+  }
 
   return (
     <DashboardLayout>
@@ -35,7 +40,7 @@ function ListPanen() {
         </Grid>
         <Grid item xs={12} container justifyContent="center" spacing={2} pt={3} pb={3}>
           <Grid item>
-            <MDButton variant="gradient" color="primary">
+            <MDButton variant="gradient" color="primary" onClick={handleButtonGenerate}>
               Generate QR
             </MDButton>
           </Grid>
