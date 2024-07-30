@@ -41,21 +41,6 @@ function DetailLokasi() {
       .catch((err) => console.log(err));
   }, []);
 
-  const [formData, setFormData] = useState({
-    namaLokasi: '',
-    namaPetani: '',
-    koordinat: '',
-    lokasiLengkap: '',
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
   const handleButtonKembali = () => {
     navigate(-1);
   }
@@ -77,7 +62,6 @@ function DetailLokasi() {
   const confirmSubmit = async (e) => {
     setShowModal(false);
     // setIsLoading(true);
-    console.log(formData);
 
     try {
       const response = await axios.delete(`${baseUrl}/lokasi/${id}`);
@@ -141,7 +125,7 @@ function DetailLokasi() {
                 {/* Lokasi Lengkap */}
                 <Grid container spacing={3} align="left" ml={2}>
                   <Grid item xs={4} md={4} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Nama Lokasi</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Lokasi Lengkap</MDTypography>
                   </Grid>
                   <Grid item xs={1} md={1} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>

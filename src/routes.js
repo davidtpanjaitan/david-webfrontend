@@ -2,7 +2,8 @@
 import Dashboard from "./layouts/dashboard/Dashboard";
 import ListPanen from "./layouts/panen/admin/ListPanen";
 import ListProduksi from "./layouts/produksi/admin/ListProduksi";
-import ScanQr from "./layouts/scanQr/ScanQr";
+import ScanQrPanen from "./layouts/scanQr/ScanQrPanen";
+import ScanQrProduksi from "./layouts/scanQr/ScanQrProduksi";
 import ListUser from "./layouts/manajemenUser/ListUser";
 import ListLokasi from "./layouts/manajemenLokasi/ListLokasi";
 
@@ -20,11 +21,19 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Scan QR",
-    key: "scan-qr",
+    name: "Scan QR Panen",
+    key: "scan-qr-panen",
     icon: <Icon fontSize="small">crop_free</Icon>,
-    route: "/scan-qr",
-    component: <ScanQr />,
+    route: "/scan-qr-panen",
+    component: <ScanQrPanen />,
+  },
+  {
+    type: "collapse",
+    name: "Scan QR Produksi",
+    key: "scan-qr-produksi",
+    icon: <Icon fontSize="small">crop_free</Icon>,
+    route: "/scan-qr-produksi",
+    component: <ScanQrProduksi />,
   },
   {
     type: "collapse",

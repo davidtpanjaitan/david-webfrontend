@@ -179,7 +179,7 @@ function AddUser() {
                         </MenuItem>
                         <MenuItem value={"admin"}>Admin</MenuItem>
                         <MenuItem value={"petugasLokasi"}>Petugas Lapangan</MenuItem>
-                        <MenuItem value={"picLokasi"}>Koordinator Lapangan</MenuItem>
+                        <MenuItem value={"picLokasi"}>PIC Lapangan</MenuItem>
                         <MenuItem value={"petugasWarehouse"}>Petugas Warehouse</MenuItem>
                         <MenuItem value={"petugasProduksi"}>Petugas Produksi</MenuItem>
                       </Select>
