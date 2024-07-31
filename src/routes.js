@@ -18,22 +18,25 @@ const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
     component: <Dashboard />,
+    roles: ["admin", "petugasLokasi", "picLokasi", "petugasWarehouse", "petugasProduksi"],
   },
   {
     type: "collapse",
     name: "Scan QR Panen",
-    key: "scan-qr-panen",
+    key: "scan-qr-pn",
     icon: <Icon fontSize="small">crop_free</Icon>,
-    route: "/scan-qr-panen",
+    route: "/scan-qr-pn",
     component: <ScanQrPanen />,
+    roles: ["admin", "petugasLokasi", "picLokasi", "petugasWarehouse", "petugasProduksi"],
   },
   {
     type: "collapse",
     name: "Scan QR Produksi",
-    key: "scan-qr-produksi",
+    key: "scan-qr-pr",
     icon: <Icon fontSize="small">crop_free</Icon>,
-    route: "/scan-qr-produksi",
+    route: "/scan-qr-pr",
     component: <ScanQrProduksi />,
+    roles: ["admin", "petugasLokasi", "picLokasi", "petugasWarehouse", "petugasProduksi"],
   },
   {
     type: "collapse",
@@ -42,14 +45,16 @@ const routes = [
     icon: <Icon fontSize="small">hive</Icon>,
     route: "/panen",
     component: <ListPanen />,
+    roles: ["admin"],
   },
   {
     type: "collapse",
     name: "Produksi",
     key: "produksi",
-    icon: <Icon fontSize="small">inventory</Icon>,
+    icon: <Icon fontSize="small">inventory_2</Icon>,
     route: "/produksi",
     component: <ListProduksi />,
+    roles: ["admin"],
   },
   {
     type: "collapse",
@@ -58,6 +63,7 @@ const routes = [
     icon: <Icon fontSize="small">place</Icon>,
     route: "/lokasi",
     component: <ListLokasi />,
+    roles: ["admin"],
   },
   {
     type: "collapse",
@@ -66,6 +72,7 @@ const routes = [
     icon: <Icon fontSize="small">person</Icon>,
     route: "/user",
     component: <ListUser />,
+    roles: ["admin"],
   },
 ];
 

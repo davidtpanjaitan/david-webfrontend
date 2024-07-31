@@ -15,29 +15,40 @@ import theme from "./assets/theme";
 
 // Material Dashboard 2 React routes
 import routes from "./routes";
+import ProtectedRoute from './ProtectedRoute';
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "./context";
 
 // Images
-import brandWhite from "./assets/images/logo-ct.png";
+import logo from "./assets/images/logo-sgi.png";
 
 // Page Login
 import Login from "./layouts/auth/Login";
 import AuthProvider from "./layouts/auth/AuthProvider";
 
+// Page Dashboard
+import Dashboard from "./layouts/dashboard/Dashboard";
+
 // Pages Lokasi
+import ListLokasi from "./layouts/manajemenLokasi/ListLokasi";
 import AddLokasi from "./layouts/manajemenLokasi/AddLokasi";
 import DetailLokasi from "./layouts/manajemenLokasi/DetailLokasi";
 import EditLokasi from "./layouts/manajemenLokasi/EditLokasi";
 
 // Pages Manajemen User
+import ListUser from "./layouts/manajemenUser/ListUser";
 import AddUser from "./layouts/manajemenUser/AddUser";
 import EditUser from "./layouts/manajemenUser/EditUser";
 import DetailUser from "./layouts/manajemenUser/DetailUser";
 import ChangePassword from "./layouts/manajemenUser/ChangePassword";
 
+// Pages Scan QR
+import ScanQrPanen from "./layouts/scanQr/ScanQrPanen";
+import ScanQrProduksi from "./layouts/scanQr/ScanQrProduksi";
+
 // Pages Panen
+import ListPanen from "./layouts/panen/admin/ListPanen";
 import GenerateQrPanen from "./layouts/panen/admin/GenerateQrPanen";
 import DetailPanen from "./layouts/panen/admin/DetailPanen";
 import IsiDataPanen from "./layouts/panen/lapangan/IsiDataPanen";
@@ -45,8 +56,12 @@ import KonfirmasiLapangan from "./layouts/panen/picLapangan/KonfirmasiLapangan";
 import KonfirmasiWarehouse from "./layouts/panen/warehouse/KonfirmasiWarehouse";
 
 // Pages Produksi
+import ListProduksi from "./layouts/produksi/admin/ListProduksi";
 import GenerateQrProduksi from "./layouts/produksi/admin/GenerateQrProduksi";
 import IsiDataProduk from "./layouts/produksi/petugasProduksi/IsiDataProduk";
+import DetailProduksi from "./layouts/produksi/admin/DetailProduksi";
+
+import Unauthorized from "./layouts/Unauthorized";
 
 function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -60,6 +75,7 @@ function App() {
   } = controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const { pathname } = useLocation();
+  const user = localStorage.getItem("user");
 
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
@@ -95,7 +111,19 @@ function App() {
       }
 
       if (route.route) {
-        return <Route exact path={route.route} element={route.component} key={route.key} />;
+        return (
+          <Route
+            key={route.key}
+            path={route.route}
+            // element={route.component}
+            element={
+              <ProtectedRoute
+                element={route.component}
+                roles={route.roles}
+              />
+            }
+          />
+        );
       }
 
       return null;
@@ -109,7 +137,7 @@ function App() {
         <>
           <Sidenav
             color={sidenavColor}
-            brand={brandWhite}
+            brand={logo}
             brandName="SGI"
             routes={routes}
             onMouseEnter={handleOnMouseEnter}
@@ -120,41 +148,156 @@ function App() {
       {layout === "vr"}
       <Routes>
         {getRoutes(routes)}
-
-        { localStorage.getItem("token")? (
-          <Route path="*" element={<Navigate to="/dashboard" />} />
-        ) : (
-          <Route path="*" element={<Navigate to="/login" />} />
-        )}
+        
+        <Route
+          path="*"
+          element={
+            user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
+          }
+        />
         
         <Route path="/login" element={<Login />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
 
-        {/* ADMIN */}
-        <Route path="/lokasi/tambah" element={<AddLokasi />} />
-        <Route path="/lokasi/:id" element={<DetailLokasi />} />
-        <Route path="/lokasi/:id/ubah" element={<EditLokasi />} />
+        {/* ALL ROLES */}
+        <Route path="/dashboard"
+          element={
+            <ProtectedRoute
+              element={<Dashboard />}
+              roles={["admin", "petugasLokasi", "picLokasi", "petugasWarehouse", "petugasProduksi"]}
+            />
+          }
+        />
+        
+        {/* MANAJEMEN LOKASI */}
+        <Route path="/lokasi/tambah"
+          element={
+            <ProtectedRoute
+              element={<AddLokasi />}
+              roles={["admin"]}
+            />
+          }
+        />
+        <Route path="/lokasi/:id"
+          element={
+            <ProtectedRoute
+              element={<DetailLokasi />}
+              roles={["admin"]}
+            />
+          }
+        />
+        <Route path="/lokasi/:id/ubah"
+          element={
+            <ProtectedRoute
+              element={<EditLokasi />}
+              roles={["admin"]}
+            />
+          }
+        />
 
-        <Route path="/user/tambah" element={<AddUser />} />
-        <Route path="/user/:id" element={<DetailUser />} />
-        <Route path="/user/:id/ubah" element={<EditUser />} />
-        <Route path="/user/:id/ubah-password" element={<ChangePassword />} />
+        {/* MANAJEMEN USER */}
+        <Route path="/user/tambah"
+          element={
+            <ProtectedRoute
+              element={<AddUser />}
+              roles={["admin"]}
+            />
+          }
+        />
+        <Route path="/user/:id"
+          element={
+            <ProtectedRoute
+              element={<DetailUser />}
+              roles={["admin"]}
+            />
+          }
+        />
+        <Route path="/user/:id/ubah"
+          element={
+            <ProtectedRoute
+              element={<EditUser />}
+              roles={["admin"]}
+            />
+          }
+        />
+        <Route path="/user/:id/ubah-password"
+          element={
+            <ProtectedRoute
+              element={<ChangePassword />}
+              roles={["admin"]}
+            />
+          }
+        />
 
-        <Route path="/panen/generate-qr" element={<GenerateQrPanen />} />
-        <Route path="/panen/:id" element={<DetailPanen />} />
+        {/* PANEN */}
+        <Route path="/panen/generate-qr"
+          element={
+            <ProtectedRoute
+              element={<GenerateQrPanen />}
+              roles={["admin"]}
+            />
+          }
+        />
+        <Route path="/panen/:id"
+          element={
+            <ProtectedRoute
+              element={<DetailPanen />}
+              roles={["admin"]}
+            />
+          }
+        />
+        <Route path="/panen/:id/isi-data"
+          element={
+            <ProtectedRoute
+              element={<IsiDataPanen />}
+              roles={["petugasLokasi"]}
+            />
+          }
+        />
+        <Route path="/panen/:id/konfirmasi-lapangan"
+          element={
+            <ProtectedRoute
+              element={<KonfirmasiLapangan />}
+              roles={["picLokasi"]}
+            />
+          }
+        />
+        <Route path="/panen/:id/konfirmasi-warehouse"
+          element={
+            <ProtectedRoute
+              element={<KonfirmasiWarehouse />}
+              roles={["petugasWarehouse"]}
+            />
+          }
+        />
 
-        <Route path="/produksi/generate-qr" element={<GenerateQrProduksi />} />
+        {/* PRODUKSI */}
+        <Route path="/produksi/generate-qr"
+          element={
+            <ProtectedRoute
+              element={<GenerateQrProduksi />}
+              roles={["admin"]}
+            />
+          }
+        />
+        <Route path="/produksi/:id"
+          element={
+            <ProtectedRoute
+              element={<DetailProduksi />}
+              roles={["admin"]}
+            />
+          }
+        />
+        <Route path="/produksi/:id/isi-data"
+          element={
+            <ProtectedRoute
+              element={<IsiDataProduk />}
+              // TODO: ILANGIN ADMIN NYA
+              roles={["petugasProduksi", "admin"]}
+            />
+          }
+        />
 
-        {/* PETUGAS LAPANGAN */}
-        <Route path="/panen/:id/isi-data" element={<IsiDataPanen />} />
-
-        {/* PIC LAPANGAN */}
-        <Route path="/panen/:id/konfirmasi-lapangan" element={<KonfirmasiLapangan />} />
-
-        {/* PETUGAS WAREHOUSE */}
-        <Route path="/panen/:id/konfirmasi-warehouse" element={<KonfirmasiWarehouse />} />
-
-        {/* PETUGAS PRODUKSI */}
-        <Route path="/produksi/:id/isi-data" element={<IsiDataProduk />} />
       </Routes>
     </ThemeProvider>
     </AuthProvider>
