@@ -18,7 +18,7 @@ const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
     component: <Dashboard />,
-    roles: ["admin", "petugasLokasi", "picLokasi", "petugasWarehouse", "petugasProduksi"],
+    roles: ["admin", "petugasLokasi", "picLokasi", "petugasWarehouse"],
   },
   {
     type: "collapse",
@@ -27,7 +27,7 @@ const routes = [
     icon: <Icon fontSize="small">crop_free</Icon>,
     route: "/scan-qr-pn",
     component: <ScanQrPanen />,
-    roles: ["admin", "petugasLokasi", "picLokasi", "petugasWarehouse", "petugasProduksi"],
+    roles: ["admin", "petugasLokasi", "picLokasi", "petugasWarehouse"],
   },
   {
     type: "collapse",
@@ -36,7 +36,7 @@ const routes = [
     icon: <Icon fontSize="small">crop_free</Icon>,
     route: "/scan-qr-pr",
     component: <ScanQrProduksi />,
-    roles: ["admin", "petugasLokasi", "picLokasi", "petugasWarehouse", "petugasProduksi"],
+    roles: ["admin", "petugasLokasi", "picLokasi", "petugasWarehouse"],
   },
   {
     type: "collapse",

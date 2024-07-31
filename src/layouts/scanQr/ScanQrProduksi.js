@@ -32,7 +32,7 @@ function ScanQrProduksi() {
           const id = data.text || data;
           setResult(data);
 
-          if (user.role === "petugasProduksi"){
+          if (user.role === "petugasWarehouse"){
             navigate(`/produksi/${id}/isi-data`)
           } else {
             navigate(`/produksi/${id}`)

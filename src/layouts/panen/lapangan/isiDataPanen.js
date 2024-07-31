@@ -180,7 +180,7 @@ function IsiDataPanen() {
         },
       });
       console.log("Data panen berhasil disimpan:", response.data);
-      navigate('/panen');
+      navigate('/');
     } catch (error) {
       console.error('Error:', error);
     }

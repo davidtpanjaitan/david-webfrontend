@@ -46,6 +46,15 @@ function DetailPanen() {
       .catch((err) => console.log(err));
   }, []);
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+  
+    return `${day}-${month}-${year}`;
+  };
+
   const handleButtonKembali = () => {
     navigate(-1);
   }
@@ -143,7 +152,7 @@ function DetailPanen() {
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="medium">{dataPanen?.tanggalPanen}</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="medium">{formatDate(dataPanen?.tanggalPanen)}</MDTypography>
                   </Grid>
                 </Grid>
                 {/* Berat Total */}
@@ -208,7 +217,7 @@ function DetailPanen() {
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="medium">{dataPanen?.tanggalWarehouse}</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="medium">{formatDate(dataPanen?.tanggalWarehouse)}</MDTypography>
                   </Grid>
                 </Grid>
                 {/* Berat sampai di WH */}

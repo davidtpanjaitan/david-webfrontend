@@ -155,7 +155,7 @@ function KonfirmasiLapangan() {
       }
       );
       console.log("Data panen berhasil di-approve:", response.data);
-      navigate('/panen');
+      navigate('/');
     } catch (error) {
       console.error('Error:', error);
     }

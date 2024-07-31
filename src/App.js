@@ -164,7 +164,7 @@ function App() {
           element={
             <ProtectedRoute
               element={<Dashboard />}
-              roles={["admin", "petugasLokasi", "picLokasi", "petugasWarehouse", "petugasProduksi"]}
+              roles={["admin", "petugasLokasi", "picLokasi", "petugasWarehouse"]}
             />
           }
         />
@@ -293,7 +293,7 @@ function App() {
             <ProtectedRoute
               element={<IsiDataProduk />}
               // TODO: ILANGIN ADMIN NYA
-              roles={["petugasProduksi", "admin"]}
+              roles={["petugasWarehouse"]}
             />
           }
         />

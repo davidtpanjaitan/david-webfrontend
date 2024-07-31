@@ -181,7 +181,7 @@ function AddUser() {
                         <MenuItem value={"petugasLokasi"}>Petugas Lapangan</MenuItem>
                         <MenuItem value={"picLokasi"}>PIC Lapangan</MenuItem>
                         <MenuItem value={"petugasWarehouse"}>Petugas Warehouse</MenuItem>
-                        <MenuItem value={"petugasProduksi"}>Petugas Produksi</MenuItem>
+                        {/* <MenuItem value={"petugasProduksi"}>Petugas Produksi</MenuItem> */}
                       </Select>
                     </FormControl>
                   </Grid>
