@@ -38,7 +38,7 @@ const MDBadge = forwardRef(
 MDBadge.defaultProps = {
   color: "info",
   variant: "gradient",
-  size: "sm",
+  size: "md",
   circular: false,
   indicator: false,
   border: false,
@@ -59,7 +59,7 @@ MDBadge.propTypes = {
     "dark",
   ]),
   variant: PropTypes.oneOf(["gradient", "contained"]),
-  size: PropTypes.oneOf(["xs", "sm", "md", "lg"]),
+  size: PropTypes.oneOf(["md"]),
   circular: PropTypes.bool,
   indicator: PropTypes.bool,
   border: PropTypes.bool,

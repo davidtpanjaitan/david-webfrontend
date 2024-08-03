@@ -282,7 +282,7 @@ function IsiDataProduk() {
                     <MDTypography id="MDTypography" variant="caption">Komposisi Madu</MDTypography>
                     <TableContainer component={Paper} variant="outlined" sx={{ boxShadow: 'none' }}>
                       <Table>
-                        {/* <TableHead sx={{ width: '100%' }}> */}
+                        <TableHead sx={{ width: '100%' }}>
                           <TableRow>
                             <TableCell sx={{ width: '50%' }} align="center">
                               <MDTypography variant="body2" fontWeight="regular">ID Panen Madu</MDTypography>
@@ -291,7 +291,7 @@ function IsiDataProduk() {
                             <MDTypography variant="body2" fontWeight="regular">Berat Dipakai</MDTypography>
                             </TableCell>
                           </TableRow>
-                        {/* </TableHead> */}
+                        </TableHead>
                         <TableBody>
                           {listPanen.map((panen) => (
                             <TableRow

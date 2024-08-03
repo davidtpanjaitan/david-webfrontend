@@ -86,7 +86,7 @@ function ScanQrProduksi() {
           <Grid item xs={12} lg={8}>
             <Card>
               <MDBox p={3} align="center">
-                  <MDTypography variant="h4">Scan QR Panen</MDTypography>
+                  <MDTypography variant="h4">Scan QR Produk</MDTypography>
               </MDBox>
                 {!scanning ? (
                   <MDBox align="center" mt={5} mb={2}>

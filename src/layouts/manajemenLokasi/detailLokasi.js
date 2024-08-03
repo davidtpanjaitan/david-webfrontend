@@ -42,7 +42,7 @@ function DetailLokasi() {
   }, []);
 
   const handleButtonKembali = () => {
-    navigate(-1);
+    navigate("/lokasi");
   }
 
   const handleButtonUbah = () => {
