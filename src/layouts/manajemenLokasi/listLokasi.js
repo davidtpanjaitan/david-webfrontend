@@ -21,23 +21,10 @@ import Footer from "../../examples/Footer";
 import DataTable from "../../examples/Tables/DataTable";
 
 // Data
-import useLokasiTable from "./data/listLokasiTable";
+import ListLokasiTable from "./data/ListLokasiTable";
 
 function ListLokasi() {
-    const baseUrl = "https://david-test-webapp.azurewebsites.net/api";
     const navigate = useNavigate();
-    const [listLokasi, setListLokasi] = useState([]);
-
-    useEffect(() => {
-        axios
-          .get(`${baseUrl}/lokasi`)
-          .then((res) => {
-            setListLokasi(res.data);
-          })
-          .catch((err) => console.log(err));
-      }, [listLokasi]);
-
-    const { columns, rows } = useLokasiTable(listLokasi);
 
     const handleButtonTambahLokasi = () => {
         navigate("/lokasi/tambah")
@@ -60,19 +47,11 @@ function ListLokasi() {
                 <Grid item xs={12}>
                     <Card>
                         <MDBox pt={3}>
-                            <DataTable
-                                table={{ columns, rows }}
-                                canSearch={true}
-                                isSorted={false}
-                                entriesPerPage={true}
-                                showTotalEntries={true}
-                                noEndBorder
-                            />
+                            <ListLokasiTable />
                         </MDBox>
                     </Card>
                 </Grid>
             </MDBox>
-        {/* <Footer /> */}
         </DashboardLayout>
     );
 }

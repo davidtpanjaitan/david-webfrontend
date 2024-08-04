@@ -18,10 +18,9 @@ import MDInput from "../../components/MDInput";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import Footer from "../../examples/Footer";
-import DataTable from "../../examples/Tables/DataTable";
 
 // Data
-import useUserTable from "./data/listUserTable";
+import ListUserTable from "./data/ListUserTable";
 
 function ListUser() {
     const baseUrl = "https://david-test-webapp.azurewebsites.net/api";
@@ -31,16 +30,7 @@ function ListUser() {
     const token = localStorage.getItem("token");
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-    useEffect(() => {
-        axios
-          .get(`${baseUrl}/user`)
-          .then((res) => {
-            setListUser(res.data);
-          })
-          .catch((err) => console.log(err));
-      }, [listUser]);
-
-    const { columns, rows } = useUserTable(listUser);
+    // const { columns, rows } = useUserTable(listUser);
 
     const handleButtonTambahUser = () => {
         navigate("/user/tambah")
@@ -51,31 +41,25 @@ function ListUser() {
             <DashboardNavbar />
             <MDBox pt={3} pb={3}>
                 <Grid item xs={12} container justifyContent="center">
-                    <MDTypography variant="h2">Daftar User</MDTypography>
+                <MDTypography variant="h2">Daftar User</MDTypography>
                 </Grid>
                 <Grid item xs={12} container justifyContent="center" spacing={2} pt={3} pb={3}>
-                    <Grid item>
-                        <MDButton variant="gradient" color="primary" onClick={handleButtonTambahUser}>
-                            + Tambah User
-                        </MDButton>
-                    </Grid>
+                <Grid item>
+                    <MDButton variant="gradient" color="primary" onClick={handleButtonTambahUser}>
+                        + Tambah User
+                    </MDButton>
                 </Grid>
+                </Grid>
+                <Grid container spacing={6}>
                 <Grid item xs={12}>
                     <Card>
-                        <MDBox pt={3}>
-                            <DataTable
-                                table={{ columns, rows }}
-                                canSearch={true}
-                                isSorted={false}
-                                entriesPerPage={true}
-                                showTotalEntries={true}
-                                noEndBorder
-                            />
-                        </MDBox>
+                    <MDBox>
+                        <ListUserTable />
+                    </MDBox>
                     </Card>
                 </Grid>
+                </Grid>
             </MDBox>
-        {/* <Footer /> */}
         </DashboardLayout>
     );
 }
