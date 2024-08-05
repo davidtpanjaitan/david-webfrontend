@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from "react-router-dom";
+import { toast, Toaster } from "react-hot-toast";
+import ReactLoading from "react-loading";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -28,17 +30,22 @@ function DetailLokasi() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [dataLokasi, setDataLokasi] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   const [showModal, setShowModal] = useState(false);
   const toggleModal = () => setShowModal(!showModal);
 
   useEffect(() => {
+    // setIsLoading(true);
     axios
       .get(`${baseUrl}/lokasi/${id}`)
       .then((res) => {
         setDataLokasi(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   const handleButtonKembali = () => {
@@ -52,11 +59,7 @@ function DetailLokasi() {
   const handleButtonHapus = (e) => {
     e.preventDefault();
 
-    // if (validateForm()) {
       setShowModal(true);
-    // } else {
-    //   console.log('Form validation failed');
-    // } 
   };
 
   const confirmSubmit = async (e) => {
@@ -67,8 +70,12 @@ function DetailLokasi() {
       const response = await axios.delete(`${baseUrl}/lokasi/${id}`);
       console.log("Lokasi berhasil dihapus:", response.data);
       navigate('/lokasi');
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      toast.success("Lokasi berhasil dihapus");
     } catch (error) {
       console.error('Error:', error);
+      toast.error("Lokasi gagal dihapus");
     }
     // } finally {
     //   setIsLoading(false); 
@@ -78,6 +85,17 @@ function DetailLokasi() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
+
+      {isLoading ? (
+        <MDBox display="flex" justifyContent="center" alignItems="center" height="60vh">
+          <ReactLoading type="balls" color="#344767" height={100} width={50} />
+        </MDBox>
+      ) : (
       <MDBox mt={6} mb={3}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} lg={8}>
@@ -181,7 +199,8 @@ function DetailLokasi() {
         </Modal>
 
       </MDBox>
-      {/* <Footer /> */}
+      )
+    }
     </DashboardLayout>
   );
 }

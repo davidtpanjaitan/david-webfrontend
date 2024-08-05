@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import { toast, Toaster } from "react-hot-toast";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -97,8 +98,12 @@ function AddLokasi() {
       });
       console.log("Lokasi berhasil disimpan:", response.data);
       navigate('/lokasi');
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      toast.success("Lokasi berhasil disimpan");
     } catch (error) {
       console.error('Error:', error);
+      toast.error("Data gagal tersimpan");
     }
     // } finally {
     //   setIsLoading(false); 
@@ -108,6 +113,12 @@ function AddLokasi() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
+      
       <MDBox mt={6} mb={3} component="form" method="post" onSubmit={handleButtonSimpan}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} lg={8}>

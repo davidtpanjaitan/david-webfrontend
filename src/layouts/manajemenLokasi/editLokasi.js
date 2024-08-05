@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from "react-router-dom";
+import { toast, Toaster } from "react-hot-toast";
+import ReactLoading from "react-loading";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -31,6 +33,7 @@ function EditLokasi() {
   const [showModal, setShowModal] = useState(false);
   const toggleModal = () => setShowModal(!showModal);
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     namaLokasi: '',
@@ -40,12 +43,16 @@ function EditLokasi() {
   });
 
   useEffect(() => {
+    // setIsLoading(true);
     axios
       .get(`${baseUrl}/lokasi/${id}`)
       .then((res) => {
         setFormData(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   const handleChange = (e) => {
@@ -105,10 +112,14 @@ function EditLokasi() {
         koordinat: formData.koordinat,
         lokasiLengkap: formData.lokasiLengkap,
       });
-      console.log("Lokasi berhasil disimpan:", response.data);
-      navigate('/lokasi');
+      console.log("Lokasi berhasil diubah:", response.data);
+      navigate(`/lokasi/${id}`);
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      toast.success("Lokasi berhasil diubah");
     } catch (error) {
       console.error('Error:', error);
+      toast.error("Data gagal tersimpan");
     }
     // } finally {
     //   setIsLoading(false); 
@@ -118,6 +129,16 @@ function EditLokasi() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
+      {isLoading ? (
+          <MDBox display="flex" justifyContent="center" alignItems="center" height="60vh">
+            <ReactLoading type="balls" color="#344767" height={100} width={50} />
+          </MDBox>
+      ) : (
       <MDBox mt={6} mb={3} component="form" method="post" onSubmit={handleButtonSimpan}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} lg={8}>
@@ -174,7 +195,7 @@ function EditLokasi() {
               </MDBox>
               <MDBox p={3} display="flex" justifyContent="center">
                 <MDButton variant="gradient" color="secondary" style={{ marginRight: '10px' }} onClick={handleButtonKembali}>Kembali</MDButton>
-                <MDButton type="submit" variant="gradient" color="primary" style={{ marginLeft: '10px' }}>Simpan</MDButton>
+                <MDButton type="submit" variant="gradient" color="info" style={{ marginLeft: '10px' }}>Simpan</MDButton>
               </MDBox>
             </Card>
           </Grid>
@@ -216,7 +237,8 @@ function EditLokasi() {
         </Modal>
 
       </MDBox>
-      {/* <Footer /> */}
+      )
+    }
     </DashboardLayout>
   );
 }

@@ -21,13 +21,14 @@ export default function ListLokasiTable(){
   const token = localStorage.getItem("token");
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [listLokasi, setListLokasi] = useState([]);
   const [filteredLokasi, setFilteredLokasi] = useState([]);
   const [search, setSearch] = useState("");
 
   const columns = [
+    { name: "id", label: "ID", options: { display: "excluded" } },
     { name: 'namaLokasi', 
       label: 'Nama Lokasi',
       options: {
@@ -70,20 +71,22 @@ export default function ListLokasiTable(){
         customBodyRender: (value, tableMeta) => {
           const id = tableMeta.rowData[0]; // Assuming the ID is in the first column
           return (
-            <MDButton
-              variant="outlined"
-              color="info"
-              onClick={() => navigate(`/lokasi/${id}`)}
-            >
-              View Details
-            </MDButton>
+            <MDBox align="center">
+              <MDButton
+                variant="outlined"
+                color="info"
+                onClick={() => navigate(`/lokasi/${id}`)}
+              >
+                View Details
+              </MDButton>
+            </MDBox>
           );
         },
       }, }
   ];
 
   useEffect(() => {
-    setIsLoading(true);
+    // setIsLoading(true);
     axios
       .get(`${baseUrl}/lokasi`)
       .then((res) => {
@@ -126,6 +129,7 @@ export default function ListLokasiTable(){
     responsive: 'standard',
     serverSide: true,
     pagination: false,
+    sort: false,
     customToolbar: () => {
       return (
         <SearchToolbarTable onSearch={handleSearch} />
@@ -159,50 +163,22 @@ export default function ListLokasiTable(){
             },
           },
         },
-        // MuiTableHead: {
-        //   styleOverrides: {
-        //     root: {
-        //       textAlign: 'center',
-        //       align: 'center',
-        //       justifyContent: 'center'
-        //     },
-        //   },
-        // },
-        // MuiTableCell: {
-        //   styleOverrides: {
-        //     head: {
-        //       // '&.MuiButtonBase-root': {
-        //       //   width: '100%',
-        //       // },
-        //       MuiButtonBase: {
-        //         styleOverrides: {
-        //           root: {
-        //             width: '100%'
-        //           }
-        //         }
-        //       }
-        //     },
-        //     root: {
-        //       // '&.MuiButtonBase-root': {
-        //       //   width: '100%',
-        //       // },
-        //       MuiButtonBase: {
-        //         styleOverrides: {
-        //           root: {
-        //             width: '100%'
-        //           }
-        //         }
-        //       }
-        //     },
-        //   },
-        // },
         // MuiButtonBase: {
         //   styleOverrides: {
         //     root: {
-        //       width: '100%'
-        //     }
-        //   }
-        // }
+        //       '&[data-testid^="headcol"]': {
+        //         width: '100%',
+        //       },
+        //     },
+        //   },
+        // },
+        MuiTableCell: {
+          styleOverrides: {
+            head: {
+              textAlign: 'center', // Center align the text
+            },
+          },
+        },
       },
     });
 
