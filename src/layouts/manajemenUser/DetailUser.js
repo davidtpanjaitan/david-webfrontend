@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from "react-router-dom";
+import ReactLoading from "react-loading";
+import { toast, Toaster } from "react-hot-toast";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -31,6 +33,7 @@ function DetailLokasi() {
 
   const [showModal, setShowModal] = useState(false);
   const toggleModal = () => setShowModal(!showModal);
+  const [isLoading, setIsLoading] = useState(true);
 
   const token = localStorage.getItem("token");
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -41,7 +44,10 @@ function DetailLokasi() {
       .then((res) => {
         setDataUser(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   const handleButtonKembali = () => {
@@ -55,11 +61,7 @@ function DetailLokasi() {
   const handleButtonHapus = (e) => {
     e.preventDefault();
 
-    // if (validateForm()) {
-      setShowModal(true);
-    // } else {
-    //   console.log('Form validation failed');
-    // } 
+    setShowModal(true);
   };
 
   const confirmSubmit = async (e) => {
@@ -70,8 +72,12 @@ function DetailLokasi() {
       const response = await axios.delete(`${baseUrl}/user/${id}`);
       console.log("User berhasil dihapus:", response.data);
       navigate('/user');
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      toast.success("User berhasil dihapus");
     } catch (error) {
       console.error('Error:', error);
+      toast.error("User gagal dihapus");
     }
     // } finally {
     //   setIsLoading(false); 
@@ -81,6 +87,17 @@ function DetailLokasi() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
+
+      {isLoading ? (
+        <MDBox display="flex" justifyContent="center" alignItems="center" height="60vh">
+          <ReactLoading type="balls" color="#344767" height={100} width={50} />
+        </MDBox>
+      ) : (
       <MDBox mt={6} mb={3}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} lg={8}>
@@ -134,7 +151,10 @@ function DetailLokasi() {
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="medium">{dataUser?.role}</MDTypography>
+                    {dataUser?.role === "admin" && <MDTypography variant="subtitle2" fontWeight="medium">Admin</MDTypography>}
+                    {dataUser?.role === "petugasLokasi" && <MDTypography variant="subtitle2" fontWeight="medium">Petugas Lapangan</MDTypography>}
+                    {dataUser?.role === "picLokasi" && <MDTypography variant="subtitle2" fontWeight="medium">PIC Lapangan</MDTypography>}
+                    {dataUser?.role === "petugasWarehouse" && <MDTypography variant="subtitle2" fontWeight="medium">Petugas Warehouse</MDTypography>}     
                   </Grid>
                 </Grid>
               </MDBox>
@@ -184,7 +204,8 @@ function DetailLokasi() {
         </Modal>
 
       </MDBox>
-      {/* <Footer /> */}
+      )
+    }
     </DashboardLayout>
   );
 }

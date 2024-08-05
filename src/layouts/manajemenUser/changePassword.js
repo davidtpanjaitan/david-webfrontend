@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from "react-router-dom";
+import { toast, Toaster } from "react-hot-toast";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -34,6 +35,8 @@ function ChangePassword() {
   const toggleModal = () => setShowModal(!showModal);
   const [errors, setErrors] = useState({});
 
+  const [newPassword, setNewPassword] = useState("");
+
   const token = localStorage.getItem("token");
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
@@ -42,7 +45,6 @@ function ChangePassword() {
     username: '',
     role: '',
     name: '',
-    password: '',
   });
 
   useEffect(() => {
@@ -53,14 +55,6 @@ function ChangePassword() {
       })
       .catch((err) => console.log(err));
   }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
 
   const handleButtonKembali = () => {
     navigate(-1);
@@ -79,8 +73,9 @@ function ChangePassword() {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.password.trim()) {
-      newErrors.password = "Password tidak boleh kosong";
+    console.log(newPassword);
+    if (!newPassword.trim()) {
+      newErrors.newPassword = "Password tidak boleh kosong";
     }
 
     setErrors(newErrors);
@@ -98,12 +93,16 @@ function ChangePassword() {
         username: formData.username,
         role: formData.role,
         name: formData.name,
-        password: formData.name,
+        password: newPassword,
       });
-      console.log("Password berhasil disimpan:", response.data);
+      console.log("Password berhasil diubah:", response.data);
       navigate('/user');
+
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      toast.success("Password berhasil diubah");
     } catch (error) {
       console.error('Error:', error);
+      toast.error("Password gagal tersimpan");
     }
     // } finally {
     //   setIsLoading(false); 
@@ -113,6 +112,12 @@ function ChangePassword() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
+      
       <MDBox mt={6} mb={3} component="form" method="post" onSubmit={handleButtonSimpan}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} lg={8}>
@@ -125,12 +130,12 @@ function ChangePassword() {
                   <Grid item xs={12} md={9} my={5}>
                     {/* New Password */}
                     <MDInput 
-                      error={errors.password}
-                      helperText={errors.password ? "Password baru tidak boleh kosong" : ""}
-                      name="password"
+                      error={errors.newPassword}
+                      helperText={errors.newPassword ? "Password baru tidak boleh kosong" : ""}
+                      name="newPassword"
                       label="Password Baru" 
-                      onChange={handleChange} 
-                      value={formData.password} 
+                      onChange={(e) => setNewPassword(e.target.value)} 
+                      value={formData.newPassword} 
                       fullWidth />
                   </Grid>
                   </Grid>

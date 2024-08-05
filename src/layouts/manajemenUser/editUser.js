@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from "react-router-dom";
+import ReactLoading from "react-loading";
+import { toast, Toaster } from "react-hot-toast";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -33,6 +35,7 @@ function EditUser() {
   const [showModal, setShowModal] = useState(false);
   const toggleModal = () => setShowModal(!showModal);
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   const token = localStorage.getItem("token");
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -51,7 +54,10 @@ function EditUser() {
       .then((res) => {
         setFormData(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   const handleChange = (e) => {
@@ -112,10 +118,14 @@ function EditUser() {
         name: formData.name,
         password: formData.name,
       });
-      console.log("User berhasil disimpan:", response.data);
-      navigate('/user');
+      console.log("User berhasil diubah:", response.data);
+      navigate(`/user/${id}`);
+
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      toast.success("User berhasil diubah");
     } catch (error) {
       console.error('Error:', error);
+      toast.error("Data gagal tersimpan");
     }
     // } finally {
     //   setIsLoading(false); 
@@ -125,6 +135,16 @@ function EditUser() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
+      {isLoading ? (
+          <MDBox display="flex" justifyContent="center" alignItems="center" height="60vh">
+            <ReactLoading type="balls" color="#344767" height={100} width={50} />
+          </MDBox>
+      ) : (
       <MDBox mt={6} mb={3} component="form" method="post" onSubmit={handleButtonSimpan}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} lg={8}>
@@ -237,7 +257,8 @@ function EditUser() {
         </Modal>
 
       </MDBox>
-      {/* <Footer /> */}
+      )
+    }
     </DashboardLayout>
   );
 }

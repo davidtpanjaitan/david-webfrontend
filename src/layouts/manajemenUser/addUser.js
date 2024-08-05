@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import { toast, Toaster } from "react-hot-toast";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -69,6 +70,7 @@ function AddUser() {
   const validateForm = () => {
     const newErrors = {};
 
+    console.log(formData.username);
     if (!formData.employeeId.trim()) {
       newErrors.employeeId = "Nama lokasi tidak boleh kosong";
     }
@@ -108,8 +110,12 @@ function AddUser() {
       });
       console.log("User berhasil disimpan:", response.data);
       navigate('/user');
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      toast.success("User berhasil disimpan");
     } catch (error) {
       console.error('Error:', error);
+      toast.error("User gagal tersimpan");
     }
     // } finally {
     //   setIsLoading(false); 
