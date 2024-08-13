@@ -29,6 +29,7 @@ import AuthProvider from "./layouts/auth/AuthProvider";
 
 // Page Dashboard
 import Dashboard from "./layouts/dashboard/Dashboard";
+import DashboardStaff from "./layouts/dashboard/DashboardStaff";
 
 // Pages Lokasi
 import ListLokasi from "./layouts/manajemenLokasi/ListLokasi";
@@ -76,6 +77,7 @@ function App() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const { pathname } = useLocation();
   const user = localStorage.getItem("user");
+  const role = localStorage.getItem("role");
 
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
@@ -152,19 +154,33 @@ function App() {
         <Route
           path="*"
           element={
-            user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
+            user ? (
+            (role === "admin" ?  <Navigate to="/dashboard" /> : <Navigate to="/dashboard-staff" /> )
+          ) : (
+            <Navigate to="/login" />
+          )
           }
         />
         
         <Route path="/login" element={<Login />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
 
-        {/* ALL ROLES */}
+        {/* DASHBOARD ADMIN */}
         <Route path="/dashboard"
           element={
             <ProtectedRoute
               element={<Dashboard />}
-              roles={["admin", "petugasLokasi", "picLokasi", "petugasWarehouse"]}
+              roles={["admin"]}
+            />
+          }
+        />
+
+        {/* DASHBOARD ADMIN */}
+        <Route path="/dashboard-staff"
+          element={
+            <ProtectedRoute
+              element={<DashboardStaff />}
+              roles={["petugasLokasi", "picLokasi", "petugasWarehouse"]}
             />
           }
         />

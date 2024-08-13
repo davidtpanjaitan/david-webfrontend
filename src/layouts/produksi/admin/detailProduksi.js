@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams, Link } from "react-router-dom";
 import ReactLoading from "react-loading";
+import { toast, Toaster } from "react-hot-toast";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -19,6 +20,7 @@ import MDBox from "../../../components/MDBox";
 import MDTypography from "../../../components/MDTypography";
 import MDButton from "../../../components/MDButton";
 import MDInput from "../../../components/MDInput";
+import MDBadge from '../../../components/MDBadge';
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "../../../examples/LayoutContainers/DashboardLayout";
@@ -38,7 +40,7 @@ function DetailProduksi() {
   const toggleModalKonfirmasi = () => setShowModalKonfirmasi(!showModalKonfirmasi);
   const [showModalHapus, setShowModalHapus] = useState(false);
   const toggleModalHapus = () => setShowModalHapus(!showModalHapus);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const approver = JSON.parse(localStorage.getItem("user"));
 
@@ -49,7 +51,10 @@ function DetailProduksi() {
         setDataProduk(res.data);
         console.log(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setIsLoading(false);
+      });
 
   }, []);
 
@@ -101,10 +106,14 @@ function DetailProduksi() {
         idApprover: approver.id,
         namaApprover: approver.name
       });
-      console.log("Data produk berhasil di-approve:", response.data);
+      console.log("Data produk berhasil dikonfirmasi:", response.data);
       navigate('/produksi');
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      toast.success("Data produk berhasil dikonfirmasi");
     } catch (error) {
       console.error('Error:', error);
+      toast.error("Data gagal disimpan");
     } finally {
       setIsLoading(false); 
     }
@@ -113,10 +122,16 @@ function DetailProduksi() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      {isLoading ? 
-      <ReactLoading type="balls" color="#0000FF"
-      height={100} width={50} />
-      :
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
+
+      {isLoading ? (
+        <MDBox display="flex" justifyContent="center" alignItems="center" height="60vh">
+          <ReactLoading type="balls" color="#344767" height={100} width={50} />
+        </MDBox>
+      ) : (
       <MDBox mt={6} mb={3}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} lg={8}>
@@ -137,18 +152,6 @@ function DetailProduksi() {
                     <MDTypography variant="subtitle2" fontWeight="medium">{id}</MDTypography>
                   </Grid>
                 </Grid>
-                {/* Nama Produk */}
-                <Grid container spacing={3} align="left" ml={2}>
-                  <Grid item xs={4} md={4} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Nama Produk</MDTypography>
-                  </Grid>
-                  <Grid item xs={1} md={1} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
-                  </Grid>
-                  <Grid item xs={7} md={7} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="medium">{dataProduk?.nama}</MDTypography>
-                  </Grid>
-                </Grid>
                 {/* Status */}
                 <Grid container spacing={3} align="left" ml={2}>
                   <Grid item xs={4} md={4} mb={2}>
@@ -158,19 +161,48 @@ function DetailProduksi() {
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="medium">{dataProduk?.status}</MDTypography>
+                    {dataProduk?.status === "GENERATED" && 
+                      <MDBadge badgeContent="KODE QR DIBUAT" color="secondary" variant="contained" size="sm"/ >
+                    }
+                    {dataProduk?.status === "SUBMITTED" && 
+                      <MDBadge badgeContent="DATA TERISI" color="warning" variant="contained" size="sm"/ >
+                    }
+                    {dataProduk?.status === "ADMIN_APPROVED" && 
+                      <MDBadge badgeContent="DIKONFIRMASI ADMIN" color="success" variant="contained" size="sm"/ >
+                    }
                   </Grid>
                 </Grid>
-                {/* Petugas Mixing */}
+                {/* Nama Produk */}
                 <Grid container spacing={3} align="left" ml={2}>
                   <Grid item xs={4} md={4} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Penanggung Jawab</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Nama Produk</MDTypography>
                   </Grid>
                   <Grid item xs={1} md={1} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
+                  {dataProduk?.nama ? (
+                    <MDTypography variant="subtitle2" fontWeight="medium">{dataProduk?.nama}</MDTypography>
+                  ):(
+                    <MDTypography variant="subtitle2" fontWeight="medium">—</MDTypography>
+                  )}
+                  </Grid>
+                </Grid>
+                
+                {/* Petugas Mixing */}
+                <Grid container spacing={3} align="left" ml={2}>
+                  <Grid item xs={4} md={4} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Petugas Produksi</MDTypography>
+                  </Grid>
+                  <Grid item xs={1} md={1} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
+                  </Grid>
+                  <Grid item xs={7} md={7} mb={2}>
+                  {dataProduk?.namaPetugasMixing ? (
                     <MDTypography variant="subtitle2" fontWeight="medium">{dataProduk?.namaPetugasMixing}</MDTypography>
+                  ):(
+                    <MDTypography variant="subtitle2" fontWeight="medium">—</MDTypography>
+                  )}
                   </Grid>
                 </Grid>
                 {/* Tanggal Mixing */}
@@ -182,7 +214,11 @@ function DetailProduksi() {
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
+                  {dataProduk?.tanggal ? (
                     <MDTypography variant="subtitle2" fontWeight="medium">{formatDate(dataProduk?.tanggal)}</MDTypography>
+                  ):(
+                    <MDTypography variant="subtitle2" fontWeight="medium">—</MDTypography>
+                  )}
                   </Grid>
                 </Grid>
                 {/* Berat Total */}
@@ -194,7 +230,7 @@ function DetailProduksi() {
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="medium">{dataProduk?.berat}</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="medium">{dataProduk?.listPanen.reduce((total, panen) => total + panen.berat, 0)} kg</MDTypography>
                   </Grid>
                 </Grid>
                 
@@ -215,6 +251,9 @@ function DetailProduksi() {
                               <MDTypography variant="body2" fontWeight="regular">ID Panen Madu</MDTypography>
                             </TableCell>
                             <TableCell sx={{ width: '50%' }} align="center">
+                              <MDTypography variant="body2" fontWeight="regular">Jenis Madu</MDTypography>
+                            </TableCell>
+                            <TableCell sx={{ width: '50%' }} align="center">
                             <MDTypography variant="body2" fontWeight="regular">Berat Dipakai</MDTypography>
                             </TableCell>
                           </TableRow>
@@ -228,8 +267,11 @@ function DetailProduksi() {
                               <TableCell sx={{ width: '50%' }} align="center">
                                 <MDTypography variant="subtitle2" fontWeight="medium">{panen.id}</MDTypography>
                               </TableCell>
+                              <TableCell sx={{ width: '50%' }} align="center">
+                                <MDTypography variant="subtitle2" fontWeight="medium">{panen.jenisMadu}</MDTypography>
+                              </TableCell>
                               <TableCell sx={{ width: '50%'}} align="center">
-                                <MDTypography variant="subtitle2" fontWeight="medium">{panen.berat}</MDTypography>
+                                <MDTypography variant="subtitle2" fontWeight="medium">{panen.berat} kg</MDTypography>
                               </TableCell>
                             </TableRow>
                           ))}
@@ -242,7 +284,11 @@ function DetailProduksi() {
               {/* Buttons */}
               <MDBox p={3} display="flex" justifyContent="center">
                 <MDButton variant="gradient" color="secondary" style={{ width: '100px' }} onClick={handleButtonKembali}>Kembali</MDButton>
-                <MDButton disabled={dataProduk.status==="ADMIN_APPROVED"} variant="gradient" color="primary" style={{ marginLeft: '10px' }} onClick={handleButtonKonfirmasi}>Konfirmasi</MDButton>
+                <MDButton 
+                  disabled={dataProduk.status!=="SUBMITTED"} 
+                  variant="gradient" color="primary" 
+                  style={{ marginLeft: '10px' }} 
+                  onClick={handleButtonKonfirmasi}>Konfirmasi</MDButton>
 
                 {dataProduk?.status === "GENERATED" && 
                   <MDButton variant="gradient" color="error" style={{ width: '100px', marginLeft: '10px' }} onClick={handleButtonHapus}>Hapus</MDButton>
@@ -271,7 +317,7 @@ function DetailProduksi() {
               <Divider sx={{ my: 0 }} />
               <MDBox p={2} my={3}>
                 <MDTypography variant="body2" color="secondary" fontWeight="regular" align="center">
-                  Apakah Anda yakin untuk melakukan konfirmasi mixing produk?
+                  Apakah Anda yakin untuk mengkonfirmasi mixing produk?
                 </MDTypography>
               </MDBox>
               <Divider sx={{ my: 0 }} />
@@ -325,7 +371,7 @@ function DetailProduksi() {
         </Modal>
 
       </MDBox>
-      }
+      )}
     </DashboardLayout>
   );
 }

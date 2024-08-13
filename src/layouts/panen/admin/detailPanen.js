@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams, Link } from "react-router-dom";
+import ReactLoading from "react-loading";
+import { toast, Toaster } from "react-hot-toast";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -16,7 +18,7 @@ import { InputAdornment } from "@mui/material";
 import MDBox from "../../../components/MDBox";
 import MDTypography from "../../../components/MDTypography";
 import MDButton from "../../../components/MDButton";
-import MDInput from "../../../components/MDInput";
+import MDBadge from '../../../components/MDBadge';
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "../../../examples/LayoutContainers/DashboardLayout";
@@ -36,6 +38,7 @@ function DetailPanen() {
   const toggleModalKonfirmasi = () => setShowModalKonfirmasi(!showModalKonfirmasi);
   const [showModalHapus, setShowModalHapus] = useState(false);
   const toggleModalHapus = () => setShowModalHapus(!showModalHapus);
+  const [isLoading, setIsLoading] = useState(true);
 
   const approver = JSON.parse(localStorage.getItem("user"));
 
@@ -45,7 +48,12 @@ function DetailPanen() {
       .then((res) => {
         setDataPanen(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setIsLoading(false);
+        console.log(dataPanen);
+        console.log(dataPanen.gambarPanenUrl)
+      });
   }, []);
 
   const formatDate = (dateString) => {
@@ -99,8 +107,12 @@ function DetailPanen() {
       });
       console.log("Data panen berhasil di-approve:", response.data);
       navigate('/panen');
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      toast.success("Data panen berhasil dikonfirmasi");
     } catch (error) {
       console.error('Error:', error);
+      toast.error("Data gagal disimpan");
     }
     // } finally {
     //   setIsLoading(false); 
@@ -110,6 +122,17 @@ function DetailPanen() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+      
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
+
+      {isLoading ? (
+        <MDBox display="flex" justifyContent="center" alignItems="center" height="60vh">
+          <ReactLoading type="balls" color="#344767" height={100} width={50} />
+        </MDBox>
+      ) : (
       <MDBox mt={6} mb={3}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} lg={8}>
@@ -139,7 +162,21 @@ function DetailPanen() {
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="medium">{dataPanen?.status}</MDTypography>
+                    {dataPanen?.status === "GENERATED" && 
+                      <MDBadge badgeContent="KODE QR DIBUAT" color="secondary" variant="contained" size="sm"/ >
+                    }
+                    {dataPanen?.status === "SUBMITTED" && 
+                      <MDBadge badgeContent="DATA TERISI" color="warning" variant="contained" size="sm"/ >
+                    }
+                    {dataPanen?.status === "PIC_APPROVED" && 
+                      <MDBadge badgeContent="DIKONFRIMASI PIC LAPANGAN" color="primary" variant="contained" size="sm"/ >
+                    }
+                    {dataPanen?.status === "ADMIN_CONFIRMED" && 
+                      <MDBadge badgeContent="DIKONFIRMASI ADMIN" color="success" variant="contained" size="sm"/ >
+                    }
+                    {dataPanen?.status === "ARRIVED_WAREHOUSE" && 
+                      <MDBadge badgeContent="SAMPAI DI WAREHOUSE" color="info" variant="contained" size="sm"/ >
+                    }
                   </Grid>
                 </Grid>
 
@@ -152,9 +189,9 @@ function DetailPanen() {
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
-                    <Link to={`/lokasi/${dataPanen?.idLokasi}`}>
+                    {/* <Link to={`/lokasi/${dataPanen?.idLokasi}`}> */}
                       <MDTypography variant="subtitle2" fontWeight="medium">{dataPanen?.namaLokasi}</MDTypography>
-                    </Link>
+                    {/* </Link> */}
                   </Grid>
                 </Grid>
                 {/* Tanggal Panen */}
@@ -166,19 +203,27 @@ function DetailPanen() {
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
+                  {dataPanen?.tanggalPanen === "0001-01-01T00:00:00" ? (
+                    <MDTypography variant="subtitle2" fontWeight="medium">—</MDTypography>
+                  ):(
                     <MDTypography variant="subtitle2" fontWeight="medium">{formatDate(dataPanen?.tanggalPanen)}</MDTypography>
+                  )}
                   </Grid>
                 </Grid>
                 {/* Berat Total */}
                 <Grid container spacing={3} align="left" ml={2}>
                   <Grid item xs={4} md={4} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Berat Total</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Berat Panen</MDTypography>
                   </Grid>
                   <Grid item xs={1} md={1} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="medium">{dataPanen?.beratPanen}</MDTypography>
+                  {dataPanen?.beratPanen ? (
+                    <MDTypography variant="subtitle2" fontWeight="medium">{dataPanen?.beratPanen} kg</MDTypography>
+                  ):(
+                    <MDTypography variant="subtitle2" fontWeight="medium">—</MDTypography>
+                  )}
                   </Grid>
                 </Grid>
                 {/* Jenis madu */}
@@ -190,7 +235,11 @@ function DetailPanen() {
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
+                  {dataPanen?.jenisMadu ? (
                     <MDTypography variant="subtitle2" fontWeight="medium">{dataPanen?.jenisMadu}</MDTypography>
+                  ):(
+                    <MDTypography variant="subtitle2" fontWeight="medium">—</MDTypography>
+                  )}
                   </Grid>
                 </Grid>
                 {/* Nama Petugas Panen */}
@@ -202,9 +251,11 @@ function DetailPanen() {
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
-                    <Link to={`/user/${dataPanen?.idPetugasPanen}`}>
-                      <MDTypography variant="subtitle2" fontWeight="medium">{dataPanen?.namaPetugasPanen}</MDTypography>
-                    </Link>
+                  {dataPanen?.namaPetugasPanen ? (
+                    <MDTypography variant="subtitle2" fontWeight="medium">{dataPanen?.namaPetugasPanen}</MDTypography>
+                  ):(
+                    <MDTypography variant="subtitle2" fontWeight="medium">—</MDTypography>
+                  )}
                   </Grid>
                 </Grid>
                 {/* Nama PIC Panen */}
@@ -216,22 +267,28 @@ function DetailPanen() {
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
-                    <Link to={`/user/${dataPanen?.idPICPanen}`}>
-                      <MDTypography variant="subtitle2" fontWeight="medium">{dataPanen?.namaPICPanen}</MDTypography>
-                    </Link>
+                  {dataPanen?.namaPICPanen ? (
+                    <MDTypography variant="subtitle2" fontWeight="medium">{dataPanen?.namaPICPanen}</MDTypography>
+                  ):(
+                    <MDTypography variant="subtitle2" fontWeight="medium">—</MDTypography>
+                  )}
                   </Grid>
                 </Grid>
         
                 {/* Tanggal sampai di WH */}
                 <Grid container spacing={3} align="left" ml={2}>
                   <Grid item xs={4} md={4} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Tanggal tiba di warehouse</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Tanggal Tiba di Warehouse</MDTypography>
                   </Grid>
                   <Grid item xs={1} md={1} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
+                  {dataPanen?.tanggalWarehouse === "0001-01-01T00:00:00" ? (
+                    <MDTypography variant="subtitle2" fontWeight="medium">—</MDTypography>
+                  ):(
                     <MDTypography variant="subtitle2" fontWeight="medium">{formatDate(dataPanen?.tanggalWarehouse)}</MDTypography>
+                  )}
                   </Grid>
                 </Grid>
                 {/* Berat sampai di WH */}
@@ -243,7 +300,11 @@ function DetailPanen() {
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="medium">{dataPanen?.beratWarehouse}</MDTypography>
+                  {dataPanen?.beratWarehouse ? (
+                    <MDTypography variant="subtitle2" fontWeight="medium">{dataPanen?.beratWarehouse} kg</MDTypography>
+                  ):(
+                    <MDTypography variant="subtitle2" fontWeight="medium">—</MDTypography>
+                  )}
                   </Grid>
                 </Grid>
                 {/* Petugas WH */}
@@ -255,7 +316,11 @@ function DetailPanen() {
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
+                  {dataPanen?.namaPetugasWarehouse ? (
                     <MDTypography variant="subtitle2" fontWeight="medium">{dataPanen?.namaPetugasWarehouse}</MDTypography>
+                  ):(
+                    <MDTypography variant="subtitle2" fontWeight="medium">—</MDTypography>
+                  )}
                   </Grid>
                 </Grid>
                 {/* Catatan WH */}
@@ -267,16 +332,59 @@ function DetailPanen() {
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
+                  {dataPanen?.catatanWarehouse ? (
                     <MDTypography variant="subtitle2" fontWeight="medium">{dataPanen?.catatanWarehouse}</MDTypography>
+                  ):(
+                    <MDTypography variant="subtitle2" fontWeight="medium">—</MDTypography>
+                  )}
                   </Grid>
                 </Grid>
+
+                {/* Berat Sisa */}
+                {/*
+                <Grid container spacing={3} align="left" ml={2}>
+                  <Grid item xs={4} md={4} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Berat Sisa</MDTypography>
+                  </Grid>
+                  <Grid item xs={1} md={1} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
+                  </Grid>
+                  <Grid item xs={7} md={7} mb={2}>
+                  {dataPanen?.beratSisa ? (
+                    <MDTypography variant="subtitle2" fontWeight="medium">{dataPanen?.beratSisa} kg</MDTypography>
+                  ):(
+                    <MDTypography variant="subtitle2" fontWeight="medium">—</MDTypography>
+                  )}
+                  </Grid>
+                </Grid>
+                */}
+                
+                  <Grid container spacing={3} align="left" ml={2}>
+                    {dataPanen?.gambarPanenUrl && (
+                    <Grid item xs={12} md={6}>
+                      <MDTypography id="MDTypography" variant="subtitle2" fontWeight="regular" mb={0.5}>Foto Panen</MDTypography>
+                      <MDBox style={{ maxWidth: '100%' }} align="left">
+                        <img src={dataPanen?.gambarPanenUrl} style={{ width: '70%', height: 'auto', maxWidth: '100%' }} />
+                      </MDBox>
+                    </Grid>
+                    )}
+                    {dataPanen?.gambarWarehouseUrl && (
+                    <Grid item xs={12} md={6}>
+                      <MDTypography id="MDTypography" variant="subtitle2" fontWeight="regular" mb={0.5}>Foto Warehouse</MDTypography>
+                      <MDBox style={{ maxWidth: '100%' }} align="left">
+                        <img src={dataPanen?.gambarWarehouseUrl} style={{ width: '70%', height: 'auto', maxWidth: '100%' }} />
+                      </MDBox>
+                    </Grid>
+                    )}
+                </Grid>
+                
 
                
               </MDBox>
               {/* Buttons */}
               <MDBox p={3} display="flex" justifyContent="center">
                 <MDButton variant="gradient" color="secondary" style={{ width: '100px' }} onClick={handleButtonKembali}>Kembali</MDButton>
-                <MDButton disabled={dataPanen.status!="GENERATED"} variant="gradient" color="primary" style={{ marginLeft: '10px' }} onClick={handleButtonKonfirmasi}>Konfirmasi</MDButton>
+                <MDButton disabled={dataPanen.status!=="ARRIVED_WAREHOUSE"} variant="gradient" color="primary" style={{ marginLeft: '10px' }} onClick={handleButtonKonfirmasi}>Konfirmasi</MDButton>
 
                 {dataPanen?.status === "GENERATED" && 
                   <MDButton variant="gradient" color="error" style={{ width: '100px', marginLeft: '10px' }} onClick={handleButtonHapus}>Hapus</MDButton>
@@ -337,7 +445,7 @@ function DetailPanen() {
             >
               <MDBox display="flex" alignItems="center" justifyContent="space-between" p={2}>
                 <MDTypography variant="h5">Konfirmasi</MDTypography>
-                <Icon fontSize="medium" sx={{ cursor: "pointer" }} onClick={toggleModalKonfirmasi}>close</Icon> 
+                <Icon fontSize="medium" sx={{ cursor: "pointer" }} onClick={toggleModalHapus}>close</Icon> 
               </MDBox>
               <Divider sx={{ my: 0 }} />
               <MDBox p={2} my={3}>
@@ -347,7 +455,7 @@ function DetailPanen() {
               </MDBox>
               <Divider sx={{ my: 0 }} />
               <MDBox display="flex" justifyContent="space-between" p={1.5}>
-                <MDButton variant="gradient" color="secondary" onClick={toggleModalKonfirmasi}>
+                <MDButton variant="gradient" color="secondary" onClick={toggleModalHapus}>
                   Batal
                 </MDButton>
                 <MDButton variant="gradient" color="info" onClick={confirmHapus}>
@@ -360,7 +468,8 @@ function DetailPanen() {
         </Modal>
 
       </MDBox>
-      {/* <Footer /> */}
+      )
+    }
     </DashboardLayout>
   );
 }

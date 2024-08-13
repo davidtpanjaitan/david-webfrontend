@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -27,6 +28,10 @@ function ListPanen() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
       <MDBox pt={3} pb={3}>
         <Grid item xs={12} container justifyContent="center">
           <MDTypography variant="h2">Daftar Panen</MDTypography>

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from 'dayjs';
+import ReactLoading from "react-loading";
+import { toast, Toaster } from "react-hot-toast";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -11,8 +13,7 @@ import Modal from "@mui/material/Modal";
 import Divider from "@mui/material/Divider";
 import Slide from "@mui/material/Slide";
 import Icon from "@mui/material/Icon";
-import { InputAdornment } from "@mui/material";
-import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
+
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -23,11 +24,11 @@ import MDBox from "../../../components/MDBox";
 import MDTypography from "../../../components/MDTypography";
 import MDButton from "../../../components/MDButton";
 import MDInput from "../../../components/MDInput";
+import MDBadge from '../../../components/MDBadge';
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "../../../examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
-import Footer from "../../../examples/Footer";
 import { styled } from '@mui/system';
 
 const StyledSelect = styled(Select)(({ theme }) => ({
@@ -39,7 +40,7 @@ const StyledSelect = styled(Select)(({ theme }) => ({
     },
   },
   "& .MuiSelect-select.Mui-disabled": {
-    color: theme.palette.text.primary, // Warna teks saat disabled
+    color: theme.palette.text.primary, 
   }
 }));
 
@@ -66,6 +67,7 @@ function KonfirmasiLapangan() {
   const baseUrl = "https://david-test-webapp.azurewebsites.net/api";
   const { id } = useParams();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
 
   const token = localStorage.getItem("token");
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -81,55 +83,32 @@ function KonfirmasiLapangan() {
   const [status, setStatus] = useState('');
   const [idPetugasPanen, setIdPetugasPanen] = useState('');
   const [namaPetugasPanen, setNamaPetugasPanen] = useState('');
+  const [idPICPanen, setIdPICPanen] = useState('');
+  const [namaPICPanen, setNamaPICPanen] = useState('');
 
   const approver = JSON.parse(localStorage.getItem("user"));
-  // const [idApprover, setIdApprover] = useState('');
-  // const [namaApprover, setNamaApprover] = useState('');
-
-  // const [formData, setFormData] = useState({
-  //   jenisMadu: '',
-  //   beratPanen: '',
-  //   tanggalPanen: '',
-  //   gambarPanenUrl: '',
-  //   idPetugasPanen: '',
-  //   namaPetugasPanen: '',
-  // });
 
   useEffect(() => {
     axios
       .get(`${baseUrl}/panen/${id}`)
       .then((res) => {
-        // setFormData(res.data);
         setJenisMadu(res.data.jenisMadu);
         setBeratPanen(res.data.beratPanen);
         setTanggalPanen(res.data.tanggalPanen);
         setIdPetugasPanen(res.data.idPetugasPanen);
         setNamaPetugasPanen(res.data.namaPetugasPanen);
+        setIdPICPanen(res.data.idPICPanen);
+        setNamaPICPanen(res.data.namaPICPanen);
         setGambarPanenUrl(res.data.gambarPanenUrl);
         setStatus(res.data.status);
         setNamaLokasi(res.data.namaLokasi);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setIsLoading(false);
+      });
       
   }, []);
-
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   if (name == "tanggalPanen"){
-  //     // console.log(value);
-  //     setFormData({
-  //       ...formData,
-  //       [name]: value.format('YYYY-MM-DDTHH:mm:ss'),
-  //     });
-  //   } 
-  //   else {
-  //     setFormData({
-  //       ...formData,
-  //       [name]: value,
-  //     });
-  //   }
-  // };
-
 
   const handleButtonKembali = () => {
     navigate(-1);
@@ -154,10 +133,14 @@ function KonfirmasiLapangan() {
         namaApprover: approver.name,
       }
       );
-      console.log("Data panen berhasil di-approve:", response.data);
+      console.log("Data panen berhasil dikonfirmasi:", response.data);
       navigate('/');
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      toast.success("Data panen berhasil dikonfirmasi");
     } catch (error) {
       console.error('Error:', error);
+      toast.error("Data gagal disimpan");
     }
     // } finally {
     //   setIsLoading(false); 
@@ -167,6 +150,17 @@ function KonfirmasiLapangan() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
+
+      {isLoading ? (
+        <MDBox display="flex" justifyContent="center" alignItems="center" height="60vh">
+          <ReactLoading type="balls" color="#344767" height={100} width={50} />
+        </MDBox>
+      ) : (
       <MDBox mt={6} mb={3} component="form" method="post" onSubmit={handleButtonKonfirmasi}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} lg={8}>
@@ -178,23 +172,71 @@ function KonfirmasiLapangan() {
                 <Grid container spacing={3} justifyContent='center'>
                   {/* ID */}
                   <Grid item xs={12} md={9}>
-                    <MDInput 
-                      disabled
-                      label="ID Panen" 
-                      value={id} 
-                      fullWidth />
+                    <MDTypography variant="subtitle2" fontWeight="regular">
+                      ID &nbsp;&nbsp;:&nbsp;&nbsp;{id}
+                    </MDTypography>
+                    
                   </Grid>
                   {/* Lokasi */}
                   <Grid item xs={12} md={9}>
-                    <MDInput 
-                      disabled
-                      label="Lokasi Panen" 
-                      // value={formData.namaLokasi}
-                      value={namaLokasi}
-                      fullWidth />
+                    <MDTypography variant="subtitle2" fontWeight="regular">Lokasi Panen
+                      &nbsp;&nbsp;&nbsp;
+                      :
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      {namaLokasi}
+                    </MDTypography>
+                  </Grid>
+                  {/* Status */}
+                  <Grid item xs={12} md={9}>
+                    <MDTypography variant="subtitle2" fontWeight="regular">
+                      Status &nbsp;&nbsp;:
+                      <span>
+                        {status === "GENERATED" && 
+                          <MDBadge badgeContent="KODE QR DIBUAT" color="secondary" variant="contained" size="sm"/ >
+                        }
+                        {status === "SUBMITTED" && 
+                          <MDBadge badgeContent="DATA TERISI" color="warning" variant="contained" size="sm"/ >
+                        }
+                        {status === "PIC_APPROVED" && 
+                          <MDBadge badgeContent="DIKONFRIMASI PIC LAPANGAN" color="primary" variant="contained" size="sm"/ >
+                        }
+                        {status === "ADMIN_CONFIRMED" && 
+                          <MDBadge badgeContent="DIKONFIRMASI ADMIN" color="success" variant="contained" size="sm"/ >
+                        }
+                        {status === "ARRIVED_WAREHOUSE" && 
+                          <MDBadge badgeContent="SAMPAI DI WAREHOUSE" color="info" variant="contained" size="sm"/ >
+                        }
+                      </span>
+                    </MDTypography>
+                  </Grid>
+                  {/* Petugas Panen */}
+                  <Grid item xs={12} md={9}>
+                    {namaPetugasPanen ? (
+                      <MDTypography variant="subtitle2" fontWeight="regular">Petugas Lapangan&nbsp;:
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{namaPetugasPanen}
+                      </MDTypography>
+                    ):(
+                      <MDTypography variant="subtitle2" fontWeight="regular">Petugas Lapangan&nbsp;&nbsp;&nbsp;&nbsp;:
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—
+                      </MDTypography>
+                    )}
+                  </Grid>
+                  {/* PIC Panen */}
+                  <Grid item xs={12} md={9}>
+                    {namaPICPanen ? (
+                      <MDTypography variant="subtitle2" fontWeight="regular">PIC Lapangan
+                      &nbsp;&nbsp;&nbsp;:
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{namaPICPanen}
+                      </MDTypography>
+                    ):(
+                      <MDTypography variant="subtitle2" fontWeight="regular">PIC Lapangan
+                      &nbsp;&nbsp;&nbsp;:
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—
+                      </MDTypography>
+                    )}
                   </Grid>
                   {/* Berat */}
-                  <Grid item xs={12} md={9}>
+                  <Grid item xs={12} md={9} mt={2}>
                     <MDInput 
                       disabled
                       name="beratPanen"
@@ -245,27 +287,26 @@ function KonfirmasiLapangan() {
                   </FormControl>
                   </Grid>
                   {/* Upload foto */}
+                  {gambarPanenUrl && (
                   <Grid item xs={12} md={9} display="grid">
-                    <MDTypography id="MDTypography" variant="body2" fontWeight="regular">Foto</MDTypography>
-                    {/* <MDInput 
-                      disabled
-                      type="file"
-                      multiple
-                      accept="image/*"
-                      name="gambarPanen"
-                      onChange={(e) => setGambarPanenUrl(e.target.files[0])}
-                    /> */}
-                    {gambarPanenUrl && (
-                    <MDBox style={{ maxWidth: '100%', marginTop: '10px' }}>
-                      <img src={gambarPanenUrl} style={{ width: '100%', height: 'auto', maxWidth: '100%' }} />
+                    <MDTypography id="MDTypography" variant="caption" fontWeight="regular" mb={0.5}>Foto (max 1 MB)</MDTypography>
+                    <MDBox style={{ maxWidth: '100%' }} my={2} align="center">
+                      <img src={gambarPanenUrl} style={{ width: '50%', height: 'auto', maxWidth: '100%' }} />
                     </MDBox>
-                    )}
                   </Grid>
+                  )}
                 </Grid>
               </MDBox>
               <MDBox p={3} display="flex" justifyContent="center">
                 <MDButton variant="gradient" color="secondary" style={{ marginRight: '10px' }} onClick={handleButtonKembali}>Kembali</MDButton>
-                <MDButton disabled={status === "PIC_APPROVED"} type="submit" variant="gradient" color="primary" style={{ marginLeft: '10px' }}>Konfirmasi</MDButton>
+                <MDButton 
+                  disabled={status !== "SUBMITTED"} 
+                  type="submit" 
+                  variant="gradient" 
+                  color="primary" 
+                  style={{ marginLeft: '10px' }}
+                  > Konfirmasi
+                </MDButton>
               </MDBox>
             </Card>
           </Grid>
@@ -299,7 +340,7 @@ function KonfirmasiLapangan() {
                   Batal
                 </MDButton>
                 <MDButton variant="gradient" color="info" onClick={confirmSubmit}>
-                  Simpan 
+                  Konfirmasi 
                 </MDButton>
               </MDBox>
             </MDBox>
@@ -307,7 +348,7 @@ function KonfirmasiLapangan() {
         </Modal>
 
       </MDBox>
-      {/* <Footer /> */}
+    )}
     </DashboardLayout>
   );
 }

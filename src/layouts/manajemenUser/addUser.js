@@ -6,14 +6,11 @@ import { toast, Toaster } from "react-hot-toast";
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import Container from "@mui/material/Container";
 import Modal from "@mui/material/Modal";
 import Divider from "@mui/material/Divider";
 import Slide from "@mui/material/Slide";
 import Icon from "@mui/material/Icon";
-import { InputAdornment } from "@mui/material";
-import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
-import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/material';
 
 // Material Dashboard 2 React components
 import MDBox from "../../components/MDBox";
@@ -24,7 +21,24 @@ import MDInput from "../../components/MDInput";
 // Material Dashboard 2 React example components
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-import Footer from "../../examples/Footer";
+import pxToRem from '../../assets/theme/functions/pxToRem';
+import { styled } from '@mui/system';
+
+const StyledFormControl = styled(FormControl)(({ theme }) => ({
+  "& .MuiOutlinedInput-notchedOutline" : {
+    borderColor: "#ced4da", 
+  },
+  "& .Mui-error .MuiOutlinedInput-notchedOutline" : {
+    borderColor: "#ced4da !important" , 
+  },
+}));
+
+const StyledFormHelperText = styled(FormHelperText)(({ theme }) => ({
+  "fontFamily" : 'Roboto',
+  "fontSize": pxToRem(12), 
+  "fontWeight": 400, 
+  "color": "red",
+}));
 
 function AddUser() {
   const baseUrl = "https://david-test-webapp.azurewebsites.net/api";
@@ -79,8 +93,9 @@ function AddUser() {
       newErrors.username = "Nama petani tidak boleh kosong";
     }
 
+    console.log(formData.role);
     if (!formData.role.trim()) {
-      newErrors.role = "Koordinat tidak boleh kosong";
+      newErrors.role = "Role tidak boleh kosong";
     }
 
     if (!formData.name.trim()) {
@@ -169,11 +184,10 @@ function AddUser() {
                   </Grid>
                   {/* Role */}
                   <Grid item xs={12} md={9}>
-                    <FormControl fullWidth>
+                    <StyledFormControl fullWidth>
                       <InputLabel id="role-label">Role</InputLabel>
                       <Select
                         error={errors.role}
-                        helperText={errors.role ? "Role belum dipilih" : ""}
                         labelId="role-label"
                         name="role"
                         label="Role"
@@ -189,7 +203,10 @@ function AddUser() {
                         <MenuItem value={"petugasWarehouse"}>Petugas Warehouse</MenuItem>
                         {/* <MenuItem value={"petugasProduksi"}>Petugas Produksi</MenuItem> */}
                       </Select>
-                    </FormControl>
+                      {errors.role && (
+                        <StyledFormHelperText error >{errors.role ? "Role belum dipilih" : ""}</StyledFormHelperText>
+                      )}
+                    </StyledFormControl>
                   </Grid>
                   {/* Password */}
                   <Grid item xs={12} md={9}>

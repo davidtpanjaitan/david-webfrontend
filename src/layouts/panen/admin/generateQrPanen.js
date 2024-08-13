@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import QRCode from 'qrcode.react';
 import html2canvas from 'html2canvas';
+import ReactLoading from "react-loading";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -12,9 +13,7 @@ import Modal from "@mui/material/Modal";
 import Divider from "@mui/material/Divider";
 import Slide from "@mui/material/Slide";
 import Icon from "@mui/material/Icon";
-import { InputAdornment } from "@mui/material";
-import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
-import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Select, MenuItem, FormControl, InputLabel, FormHelperText} from '@mui/material';
 
 // Material Dashboard 2 React components
 import MDBox from "../../../components/MDBox";
@@ -25,7 +24,24 @@ import MDInput from "../../../components/MDInput";
 // Material Dashboard 2 React example components
 import DashboardLayout from "../../../examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
-import Footer from "../../../examples/Footer";
+import pxToRem from '../../../assets/theme/functions/pxToRem';
+import { styled } from '@mui/system';
+
+const StyledFormControl = styled(FormControl)(({ theme }) => ({
+  "& .MuiOutlinedInput-notchedOutline" : {
+    borderColor: "#ced4da", 
+  },
+  "& .Mui-error .MuiOutlinedInput-notchedOutline" : {
+    borderColor: "#ced4da !important", // border color when error
+  },
+}));
+
+const StyledFormHelperText = styled(FormHelperText)(({ theme }) => ({
+  "fontFamily" : 'Roboto',
+  "fontSize": pxToRem(12), 
+  "fontWeight": 400, 
+  "color": "red",
+}));
 
 function GenerateQrPanen() {
   const baseUrl = "https://david-test-webapp.azurewebsites.net/api";
@@ -39,6 +55,8 @@ function GenerateQrPanen() {
 
   const token = localStorage.getItem("token");
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     idLokasi:'',
@@ -91,7 +109,6 @@ function GenerateQrPanen() {
 
     if (!formData.idLokasi.trim()) {
       newErrors.idLokasi = "Lokasi tidak boleh kosong";
-      console.log("KOSONG")
     }
 
     if (!formData.jumlah.trim()) {
@@ -106,7 +123,7 @@ function GenerateQrPanen() {
 
   const confirmSubmit = async (e) => {
     setShowModal(false);
-    // setIsLoading(true);
+    setIsLoading(true);
     console.log(formData);
 
     try {
@@ -121,10 +138,9 @@ function GenerateQrPanen() {
       
     } catch (error) {
       console.error('Error:', error);
+    } finally {
+      setIsLoading(false); 
     }
-    // } finally {
-    //   setIsLoading(false); 
-    // }
   };
 
   const handleDownload = async (code, index) => {
@@ -158,11 +174,10 @@ function GenerateQrPanen() {
   
                   {/* Role */}
                   <Grid item xs={12} md={9}>
-                    <FormControl fullWidth>
+                    <StyledFormControl fullWidth>
                       <InputLabel id="lokasi-label">Lokasi</InputLabel>
                       <Select
-                        // error={errors.lokasi}
-                        // helperText={errors.lokasi ? "Lokasi belum dipilih" : ""}
+                        error={errors.idLokasi}
                         labelId="lokasi-label"
                         name="namaLokasi"
                         label="Lokasi"
@@ -176,16 +191,17 @@ function GenerateQrPanen() {
                         { listLokasi.map((lokasi) => (
                           <MenuItem key={lokasi.id} value={lokasi.namaLokasi}>{lokasi.namaLokasi} - {lokasi.lokasiLengkap}</MenuItem>
                         ))}
-                  
                       </Select>
-
-                    </FormControl>
+                      {errors.idLokasi && (
+                        <StyledFormHelperText error>{errors.idLokasi ? "Lokasi belum dipilih" : ""}</StyledFormHelperText>
+                      )}
+                    </StyledFormControl>
                   </Grid>
                   {/* Jumlah */}
                   <Grid item xs={12} md={9}>
                     <MDInput 
                       error={errors.jumlah}
-                      helperText={errors.jumlah ? "Jumlah tidak boleh kosong" : ""}
+                      helperText={errors.jumlah ? errors.jumlah : ""}
                       name="jumlah"
                       type="number"
                       label="Jumlah" 
@@ -198,10 +214,16 @@ function GenerateQrPanen() {
               </MDBox>
               <MDBox p={3} display="flex" justifyContent="center">
                 <MDButton variant="gradient" color="secondary" style={{ marginRight: '10px' }} onClick={handleButtonKembali}>Kembali</MDButton>
-                <MDButton type="submit" variant="gradient" color="primary" style={{ marginLeft: '10px' }} disabled={generatedPanen.length > 0}>Simpan</MDButton>
+                <MDButton type="submit" variant="gradient" color="primary" style={{ marginLeft: '10px' }} disabled={generatedPanen.length > 0}>Generate</MDButton>
               </MDBox>
 
               {/* QR Code */}
+              {isLoading ? (
+                <MDBox display="flex" justifyContent="center" alignItems="center" height="40vh">
+                  <ReactLoading type="balls" color="#344767" height={100} width={50} />
+                </MDBox>
+              ) : (
+                <>
               <MDBox p={3} display="flex" justifyContent="center">
                 {generatedPanen.length > 0 && 
                 <MDButton variant="gradient" color="info" onClick={handleDownloadAll}>Download QR</MDButton>
@@ -217,7 +239,9 @@ function GenerateQrPanen() {
                   ))}
                 </Grid>   
               </MDBox>
-
+              </>
+              )
+            }
             </Card>
           </Grid>
         </Grid>
@@ -241,7 +265,7 @@ function GenerateQrPanen() {
               <Divider sx={{ my: 0 }} />
               <MDBox p={2} my={3}>
                 <MDTypography variant="body2" color="secondary" fontWeight="regular" align="center">
-                  Apakah Anda yakin untuk menyimpan user baru?
+                  Apakah Anda yakin untuk membuat QR Panen?
                 </MDTypography>
               </MDBox>
               <Divider sx={{ my: 0 }} />
@@ -250,7 +274,7 @@ function GenerateQrPanen() {
                   Batal
                 </MDButton>
                 <MDButton variant="gradient" color="info" onClick={confirmSubmit}>
-                  Simpan 
+                  Yakin 
                 </MDButton>
               </MDBox>
             </MDBox>

@@ -1,6 +1,7 @@
 import { useContext, createContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { toast } from "react-hot-toast";
 
 const AuthContext = createContext();
 
@@ -30,12 +31,20 @@ const AuthProvider = ({ children }) => {
         localStorage.setItem("token", response.data.token);
         console.log(localStorage.getItem("token"));
       
-        navigate("/dashboard");
+        if (response.data.user.role === "admin"){
+          navigate("/dashboard");
+        } else {
+          navigate("/dashboard-staff")
+        }
+        
         return;
       }
       throw new Error(response.message);
     } catch (err) {
       console.error(err);
+
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      toast.error("Login gagal: Username atau password salah");
     }
   };
 

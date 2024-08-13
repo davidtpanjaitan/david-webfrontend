@@ -17,6 +17,7 @@ import { useState } from "react";
 
 // react-router-dom components
 import { Link } from "react-router-dom";
+import { toast, Toaster } from "react-hot-toast";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -45,21 +46,30 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (username !== "" && password !== "") {
       try {
         await auth.loginAction(username, password);
       } catch (error) {
-        alert('Login Gagal: Username atau password salah');
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        toast.error("Login gagal: Username atau password salah");
+        // alert('Login Gagal: Username atau password salah');
       }
       
     } else {
-      alert("Mohon masukkan input yang valid");
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      toast.error("Mohon masukkan input yang valid");
+      // alert("Mohon masukkan input yang valid");
     }
     
   };
 
   return (
     <PageLayout>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
       <MDBox
         position="absolute"
         width="100%"

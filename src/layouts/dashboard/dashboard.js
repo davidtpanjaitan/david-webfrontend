@@ -12,6 +12,9 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
+import { useState, useEffect } from "react";
+import axios from "axios";
+import ReactLoading from "react-loading";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -31,25 +34,107 @@ import ComplexStatisticsCard from "../../examples/Cards/StatisticsCards/ComplexS
 import reportsBarChartData from "./data/reportsBarChartData";
 import reportsLineChartData from "./data/reportsLineChartData";
 
-// Dashboard components
-import Projects from "./components/Projects";
-import OrdersOverview from "./components/OrdersOverview";
+import { parseISO } from 'date-fns';
 
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
+  const baseUrl = "https://david-test-webapp.azurewebsites.net/api";
+
+  const token = localStorage.getItem("token");
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+  const [isLoadingTotals, setIsLoadingTotals] = useState(true);
+  const [isLoadingChart, setIsLoadingChart] = useState(true);
+
+  const [totalPanen, setTotalPanen] = useState(0);
+  const [totalProduk, setTotalProduk] = useState(0);
+  const [totalLokasi, setTotalLokasi] = useState(0);
+  const [totalUser, setTotalUser] = useState(0);
+
+  const [chartPanenData, setChartPanenData] = useState({});
+  const [chartProdukData, setChartProdukData] = useState({});
+
+  const [apiResPanenChart, SetApiResPanenChart] = useState({});
+
+  const formatChartData = (apiResponse) => {
+    // Extract months and item counts
+    const months = apiResponse.monthlyStats.map(stat => stat.month);
+    const itemCounts = apiResponse.monthlyStats.map(stat => parseInt(stat.itemCount, 10));
+    
+    // Format month labels
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const formattedMonths = months.map(month => {
+      const [year, monthNumber] = month.split("-");
+      return monthNames[parseInt(monthNumber, 10) - 1];
+    });
+  
+    return {
+      labels: formattedMonths,
+      datasets: {
+        label: "Item Count",
+        data: itemCounts
+      }
+    };
+  };
+
+  useEffect(() => {
+    const fetchDataTotals = async () => {
+      try {
+
+        const lokasiRes = await axios.get(`${baseUrl}/lokasi`);
+        setTotalLokasi(lokasiRes.data.length);
+
+        const userRes = await axios.get(`${baseUrl}/user`);
+        setTotalUser(userRes.data.length);
+
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setIsLoadingTotals(false); 
+      }
+    };
+
+    fetchDataTotals();
+  }, []);
+
+  useEffect(() => {
+    const fetchDataChart = async () => {
+      try {
+        const panenRes = await axios.get(`${baseUrl}/panen/statistics`);
+        setChartPanenData(formatChartData(panenRes.data));
+        setTotalPanen(panenRes.data.lifetimeItemCount);
+
+        const produkRes = await axios.get(`${baseUrl}/produk/statistics`);
+        setChartProdukData(formatChartData(produkRes.data));
+        setTotalProduk(produkRes.data.lifetimeItemCount);
+
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoadingChart(false); 
+      }
+    };
+
+    fetchDataChart();
+  }, []);
 
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDBox py={3}>
+      {isLoadingChart || isLoadingTotals ? (
+      <MDBox display="flex" justifyContent="center" alignItems="center" height="80vh">
+        <ReactLoading type="balls" color="#344767" height={100} width={50} />
+      </MDBox>
+      ):(
+        <MDBox py={3}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="dark"
-                icon="weekend"
-                title="Bookings"
-                count={281}
+                icon="hive"
+                title="Total Panen"
+                count={totalPanen}
                 percentage={{
                   color: "success",
                   amount: "+55%",
@@ -61,9 +146,9 @@ function Dashboard() {
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
-                icon="leaderboard"
-                title="Today's Users"
-                count="2,300"
+                icon="inventory_2"
+                title="Total Produk"
+                count={totalProduk}
                 percentage={{
                   color: "success",
                   amount: "+3%",
@@ -76,9 +161,9 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="success"
-                icon="store"
-                title="Revenue"
-                count="34k"
+                icon="place"
+                title="Total Lokasi"
+                count={totalLokasi}
                 percentage={{
                   color: "success",
                   amount: "+1%",
@@ -92,8 +177,8 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
-                title="Followers"
-                count="+91"
+                title="Total User"
+                count={totalUser}
                 percentage={{
                   color: "success",
                   amount: "",
@@ -105,57 +190,36 @@ function Dashboard() {
         </Grid>
         <MDBox mt={4.5}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsBarChart
-                  color="info"
-                  title="website views"
-                  description="Last Campaign Performance"
-                  date="campaign sent 2 days ago"
-                  chart={reportsBarChartData}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
+            <Grid item xs={12} md={6} lg={6}>
               <MDBox mb={3}>
                 <ReportsLineChart
                   color="success"
-                  title="daily sales"
-                  description={
-                    <>
-                      (<strong>+15%</strong>) increase in today sales.
-                    </>
-                  }
-                  date="updated 4 min ago"
-                  chart={sales}
+                  title="Grafik Total Panen per bulan"
+                  // description={
+                  //   <>
+                  //     (<strong>+15%</strong>) increase in today sales.
+                  //   </>
+                  // }
+                  chart={chartPanenData}
                 />
               </MDBox>
             </Grid>
-            <Grid item xs={12} md={6} lg={4}>
+            <Grid item xs={12} md={6} lg={6}>
               <MDBox mb={3}>
                 <ReportsLineChart
                   color="dark"
-                  title="completed tasks"
-                  description="Last Campaign Performance"
-                  date="just updated"
-                  chart={tasks}
+                  title="Grafik Total Produksi per bulan"
+                  // description="Last Campaign Performance"
+                  // date="just updated"
+                  chart={chartProdukData}
                 />
               </MDBox>
-            </Grid>
-          </Grid>
-        </MDBox>
-        <MDBox>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={8}>
-              <Projects />
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <OrdersOverview />
             </Grid>
           </Grid>
         </MDBox>
       </MDBox>
-      <Footer />
+      )}
+      
     </DashboardLayout>
   );
 }

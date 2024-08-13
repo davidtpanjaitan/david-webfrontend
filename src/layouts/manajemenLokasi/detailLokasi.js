@@ -187,7 +187,7 @@ function DetailLokasi() {
               </MDBox>
               <Divider sx={{ my: 0 }} />
               <MDBox display="flex" justifyContent="space-between" p={1.5}>
-                <MDButton variant="gradient" color="secondary" onClick={toggleModal}>
+                <MDButton variant="gradient" color="secondary" size="large" onClick={toggleModal}>
                   Batal
                 </MDButton>
                 <MDButton variant="gradient" color="error" onClick={confirmSubmit}>

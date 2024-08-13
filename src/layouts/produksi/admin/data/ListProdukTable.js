@@ -58,11 +58,19 @@ export default function ListProdukTable(){
       label: 'Tanggal Diajukan', 
       options: {
         customBodyRender: (value) => {
+          if (!value){
+            return (
+              <MDTypography variant="subtitle2" color="text" fontWeight="medium" align="center">
+                —
+              </MDTypography>
+            );
+          } else {
           return (
             <MDTypography variant="subtitle2" color="text" fontWeight="medium" align="center">
               {format(new Date(value), "dd-MM-yyyy")}
             </MDTypography>
           );
+          }
         },
       },
     },
@@ -71,15 +79,11 @@ export default function ListProdukTable(){
       options: {
         customBodyRender: (value) => {
           if (value === 'GENERATED') {
-            return <MDBox align="center"><MDBadge badgeContent={value} color="secondary" variant="contained" size="md" alignItems="center" /></MDBox>;
+            return <MDBox align="center"><MDBadge badgeContent="KODE QR DIBUAT" color="secondary" variant="contained" size="md" alignItems="center" /></MDBox>;
           } else if (value === 'SUBMITTED') {
-            return <MDBox align="center"><MDBadge badgeContent={value} color="warning" variant="contained" size="md" alignItems="center" /></MDBox>;
-          } else if (value === 'PIC_APPROVED') {
-            return <MDBox align="center"><MDBadge badgeContent={value} color="primary" variant="contained" size="md" align="center" /></MDBox>;
-          } else if (value === 'ADMIN_CONFIRMED') {
-            return <MDBox align="center"><MDBadge badgeContent={value} color="success" variant="contained" size="md" /></MDBox>;
-          } else if (value === 'WAREHOUSE_') {
-            return <MDBox align="center"><MDBadge badgeContent={value} color="info" variant="contained" size="md" /></MDBox>;
+            return <MDBox align="center"><MDBadge badgeContent="DATA TERISI" color="warning" variant="contained" size="md" alignItems="center" /></MDBox>;
+          } else if (value === "ADMIN_APPROVED") {
+            return <MDBox align="center"><MDBadge badgeContent="DIKONFIRMASI ADMIN" color="success" variant="contained" size="md" /></MDBox>;
           } else {
             return <MDBox align="center"><MDBadge badgeContent={value} color="dark" variant="contained" size="md" /></MDBox>;
           } 
@@ -144,6 +148,7 @@ export default function ListProdukTable(){
     rowsPerPage: pageSize,
     rowsPerPageOptions: [5, 10, 15, 20, 25],
     page: pageNum,
+    sort: false,
     onTableChange: (action, tableState) => {
       switch (action) {
         case 'changePage':
@@ -189,50 +194,13 @@ export default function ListProdukTable(){
             },
           },
         },
-        // MuiTableHead: {
-        //   styleOverrides: {
-        //     root: {
-        //       textAlign: 'center',
-        //       align: 'center',
-        //       justifyContent: 'center'
-        //     },
-        //   },
-        // },
-        // MuiTableCell: {
-        //   styleOverrides: {
-        //     head: {
-        //       // '&.MuiButtonBase-root': {
-        //       //   width: '100%',
-        //       // },
-        //       MuiButtonBase: {
-        //         styleOverrides: {
-        //           root: {
-        //             width: '100%'
-        //           }
-        //         }
-        //       }
-        //     },
-        //     root: {
-        //       // '&.MuiButtonBase-root': {
-        //       //   width: '100%',
-        //       // },
-        //       MuiButtonBase: {
-        //         styleOverrides: {
-        //           root: {
-        //             width: '100%'
-        //           }
-        //         }
-        //       }
-        //     },
-        //   },
-        // },
-        // MuiButtonBase: {
-        //   styleOverrides: {
-        //     root: {
-        //       width: '100%'
-        //     }
-        //   }
-        // }
+        MuiTableCell: {
+          styleOverrides: {
+            head: {
+              textAlign: 'center', // Center align the text
+            },
+          },
+        },
       },
     });
 

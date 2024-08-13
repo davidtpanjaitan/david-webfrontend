@@ -1,5 +1,6 @@
-// Material Dashboard 2 React layouts
+// Pages
 import Dashboard from "./layouts/dashboard/Dashboard";
+import DashboardStaff from "./layouts/dashboard/DashboardStaff";
 import ListPanen from "./layouts/panen/admin/ListPanen";
 import ListProduksi from "./layouts/produksi/admin/ListProduksi";
 import ScanQrPanen from "./layouts/scanQr/ScanQrPanen";
@@ -18,7 +19,16 @@ const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
     component: <Dashboard />,
-    roles: ["admin", "petugasLokasi", "picLokasi", "petugasWarehouse"],
+    roles: ["admin"],
+  },
+  {
+    type: "collapse",
+    name: "Dashboard",
+    key: "dashboard",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/dashboard-staff",
+    component: <DashboardStaff />,
+    roles: ["petugasLokasi", "picLokasi", "petugasWarehouse"],
   },
   {
     type: "collapse",
