@@ -142,7 +142,7 @@ function DetailProduksi() {
               </MDBox>
               <MDBox pt={2} px={5} align="center">
                 {/* ID Produk */}
-                <Grid container spacing={3} align="left" ml={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}} >
                   <Grid item xs={4} md={4} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="regular">ID Produk</MDTypography>
                   </Grid>
@@ -154,7 +154,7 @@ function DetailProduksi() {
                   </Grid>
                 </Grid>
                 {/* Status */}
-                <Grid container spacing={3} align="left" ml={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="regular">Status</MDTypography>
                   </Grid>
@@ -174,7 +174,7 @@ function DetailProduksi() {
                   </Grid>
                 </Grid>
                 {/* Nama Produk */}
-                <Grid container spacing={3} align="left" ml={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="regular">Nama Produk</MDTypography>
                   </Grid>
@@ -191,7 +191,7 @@ function DetailProduksi() {
                 </Grid>
                 
                 {/* Petugas Mixing */}
-                <Grid container spacing={3} align="left" ml={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="regular">Petugas Produksi</MDTypography>
                   </Grid>
@@ -207,9 +207,9 @@ function DetailProduksi() {
                   </Grid>
                 </Grid>
                 {/* Tanggal Mixing */}
-                <Grid container spacing={3} align="left" ml={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Tanggal Produk Diajukan</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Tanggal Diajukan</MDTypography>
                   </Grid>
                   <Grid item xs={1} md={1} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
@@ -223,9 +223,9 @@ function DetailProduksi() {
                   </Grid>
                 </Grid>
                 {/* Berat Total */}
-                <Grid container spacing={3} align="left" ml={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Berat Total Produk</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Berat Total</MDTypography>
                   </Grid>
                   <Grid item xs={1} md={1} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
@@ -236,7 +236,7 @@ function DetailProduksi() {
                 </Grid>
                 
                 {/* Komposisi Madu */}
-                <Grid container spacing={3} align="left" sx={{ ml: { xs: 0, md: 2 } }}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4}>
                     <MDTypography variant="subtitle2" fontWeight="regular">Komposisi Madu</MDTypography>
                   </Grid>

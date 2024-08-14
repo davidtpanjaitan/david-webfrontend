@@ -142,7 +142,7 @@ function DetailPanen() {
               </MDBox>
               <MDBox pt={2} px={5} align="center">
                 {/* ID Panen */}
-                <Grid container spacing={3} align="left" ml={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="regular">ID Panen</MDTypography>
                   </Grid>
@@ -154,7 +154,7 @@ function DetailPanen() {
                   </Grid>
                 </Grid>
                 {/* Status */}
-                <Grid container spacing={3} align="left" ml={2} mb={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="regular">Status</MDTypography>
                   </Grid>
@@ -181,7 +181,7 @@ function DetailPanen() {
                 </Grid>
 
                 {/* Nama Lokasi */}
-                <Grid container spacing={3} align="left" ml={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="regular">Lokasi Panen</MDTypography>
                   </Grid>
@@ -195,7 +195,7 @@ function DetailPanen() {
                   </Grid>
                 </Grid>
                 {/* Tanggal Panen */}
-                <Grid container spacing={3} align="left" ml={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="regular">Tanggal Panen</MDTypography>
                   </Grid>
@@ -211,7 +211,7 @@ function DetailPanen() {
                   </Grid>
                 </Grid>
                 {/* Berat Total */}
-                <Grid container spacing={3} align="left" ml={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="regular">Berat Panen</MDTypography>
                   </Grid>
@@ -227,7 +227,7 @@ function DetailPanen() {
                   </Grid>
                 </Grid>
                 {/* Jumlah Drum */}
-                <Grid container spacing={3} align="left" ml={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="regular">Jumlah Drum</MDTypography>
                   </Grid>
@@ -243,7 +243,7 @@ function DetailPanen() {
                   </Grid>
                 </Grid>
                 {/* Jumlah Dirigen */}
-                <Grid container spacing={3} align="left" ml={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="regular">Jumlah Jerigen</MDTypography>
                   </Grid>
@@ -259,7 +259,7 @@ function DetailPanen() {
                   </Grid>
                 </Grid>
                 {/* Jenis madu */}
-                <Grid container spacing={3} align="left" ml={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="regular">Jenis madu</MDTypography>
                   </Grid>
@@ -275,7 +275,7 @@ function DetailPanen() {
                   </Grid>
                 </Grid>
                 {/* Nama Petugas Panen */}
-                <Grid container spacing={3} align="left" ml={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="regular">Petugas Panen</MDTypography>
                   </Grid>
@@ -291,7 +291,7 @@ function DetailPanen() {
                   </Grid>
                 </Grid>
                 {/* Nama PIC Panen */}
-                <Grid container spacing={3} align="left" ml={2} mb={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}} mb={2}>
                   <Grid item xs={4} md={4} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="regular">PIC Panen</MDTypography>
                   </Grid>
@@ -308,9 +308,9 @@ function DetailPanen() {
                 </Grid>
         
                 {/* Tanggal sampai di WH */}
-                <Grid container spacing={3} align="left" ml={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Tanggal Tiba di Warehouse</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Tanggal Tiba di WH</MDTypography>
                   </Grid>
                   <Grid item xs={1} md={1} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
@@ -324,9 +324,9 @@ function DetailPanen() {
                   </Grid>
                 </Grid>
                 {/* Berat sampai di WH */}
-                <Grid container spacing={3} align="left" ml={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Berat Tiba di Warehouse</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Berat Tiba di WH</MDTypography>
                   </Grid>
                   <Grid item xs={1} md={1} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
@@ -340,9 +340,9 @@ function DetailPanen() {
                   </Grid>
                 </Grid>
                 {/* Petugas WH */}
-                <Grid container spacing={3} align="left" ml={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Petugas Warehouse</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Petugas WH</MDTypography>
                   </Grid>
                   <Grid item xs={1} md={1} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
@@ -356,9 +356,9 @@ function DetailPanen() {
                   </Grid>
                 </Grid>
                 {/* Catatan WH */}
-                <Grid container spacing={3} align="left" ml={2}>
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Catatan Warehouse</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Catatan WH</MDTypography>
                   </Grid>
                   <Grid item xs={1} md={1} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
@@ -391,7 +391,7 @@ function DetailPanen() {
                 </Grid>
                 */}
                 
-                  <Grid container spacing={3} align="left" ml={2}>
+                  <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                     {dataPanen?.gambarPanenUrl && (
                     <Grid item xs={12} md={6}>
                       <MDTypography id="MDTypography" variant="subtitle2" fontWeight="regular" mb={0.5}>Foto Panen</MDTypography>
