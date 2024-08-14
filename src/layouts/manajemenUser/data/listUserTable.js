@@ -78,6 +78,8 @@ export default function ListUserTable(){
             return <MDBox align="center"><MDBadge badgeContent={"PIC Lapangan"} color="primary" variant="contained" size="md" align="center" /></MDBox>;
           } else if (value === 'petugasWarehouse') {
             return <MDBox align="center"><MDBadge badgeContent={"Petugas Warehouse"} color="success" variant="contained" size="md" /></MDBox>;
+          } else if (value === 'petugasProduksi') {
+            return <MDBox align="center"><MDBadge badgeContent={"Petugas Produksi"} color="secondary" variant="contained" size="md" /></MDBox>;
           } 
         },
       },

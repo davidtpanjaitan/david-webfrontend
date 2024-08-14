@@ -43,6 +43,7 @@ function DetailProduksi() {
   const [isLoading, setIsLoading] = useState(true);
 
   const approver = JSON.parse(localStorage.getItem("user"));
+  const role = localStorage.getItem("role");
 
   useEffect(() => {
     axios
@@ -247,13 +248,13 @@ function DetailProduksi() {
                       <Table>
                         <TableHead sx={{ width: '100%' }}>
                           <TableRow>
-                            <TableCell sx={{ width: '50%' }} align="center">
+                            <TableCell align="center">
                               <MDTypography variant="body2" fontWeight="regular">ID Panen Madu</MDTypography>
                             </TableCell>
-                            <TableCell sx={{ width: '50%' }} align="center">
+                            <TableCell align="center">
                               <MDTypography variant="body2" fontWeight="regular">Jenis Madu</MDTypography>
                             </TableCell>
-                            <TableCell sx={{ width: '50%' }} align="center">
+                            <TableCell align="center">
                             <MDTypography variant="body2" fontWeight="regular">Berat Dipakai</MDTypography>
                             </TableCell>
                           </TableRow>
@@ -264,13 +265,13 @@ function DetailProduksi() {
                               key={panen.id}
                               // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
-                              <TableCell sx={{ width: '50%' }} align="center">
+                              <TableCell align="center">
                                 <MDTypography variant="subtitle2" fontWeight="medium">{panen.id}</MDTypography>
                               </TableCell>
-                              <TableCell sx={{ width: '50%' }} align="center">
+                              <TableCell align="center">
                                 <MDTypography variant="subtitle2" fontWeight="medium">{panen.jenisMadu}</MDTypography>
                               </TableCell>
-                              <TableCell sx={{ width: '50%'}} align="center">
+                              <TableCell  align="center">
                                 <MDTypography variant="subtitle2" fontWeight="medium">{panen.berat} kg</MDTypography>
                               </TableCell>
                             </TableRow>
@@ -282,16 +283,22 @@ function DetailProduksi() {
                 </Grid>
               </MDBox>
               {/* Buttons */}
-              <MDBox p={3} display="flex" justifyContent="center">
+              <MDBox p={3} mt={2} display="flex" justifyContent="center">
                 <MDButton variant="gradient" color="secondary" style={{ width: '100px' }} onClick={handleButtonKembali}>Kembali</MDButton>
-                <MDButton 
-                  disabled={dataProduk.status!=="SUBMITTED"} 
-                  variant="gradient" color="primary" 
-                  style={{ marginLeft: '10px' }} 
-                  onClick={handleButtonKonfirmasi}>Konfirmasi</MDButton>
-
-                {dataProduk?.status === "GENERATED" && 
-                  <MDButton variant="gradient" color="error" style={{ width: '100px', marginLeft: '10px' }} onClick={handleButtonHapus}>Hapus</MDButton>
+                {role === "admin" &&
+                <>
+                  {dataProduk.status === "SUBMITTED" &&
+                  <MDButton 
+                    // disabled={dataProduk.status!=="SUBMITTED"} 
+                    variant="gradient" color="primary" 
+                    style={{ marginLeft: '10px' }} 
+                    onClick={handleButtonKonfirmasi}>Konfirmasi
+                  </MDButton>
+                  }
+                  {dataProduk?.status === "GENERATED" && 
+                    <MDButton variant="gradient" color="error" style={{ width: '100px', marginLeft: '10px' }} onClick={handleButtonHapus}>Hapus</MDButton>
+                  }
+                </>
                 }
               </MDBox>
             </Card>

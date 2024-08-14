@@ -154,7 +154,8 @@ function DetailLokasi() {
                     {dataUser?.role === "admin" && <MDTypography variant="subtitle2" fontWeight="medium">Admin</MDTypography>}
                     {dataUser?.role === "petugasLokasi" && <MDTypography variant="subtitle2" fontWeight="medium">Petugas Lapangan</MDTypography>}
                     {dataUser?.role === "picLokasi" && <MDTypography variant="subtitle2" fontWeight="medium">PIC Lapangan</MDTypography>}
-                    {dataUser?.role === "petugasWarehouse" && <MDTypography variant="subtitle2" fontWeight="medium">Petugas Warehouse</MDTypography>}     
+                    {dataUser?.role === "petugasWarehouse" && <MDTypography variant="subtitle2" fontWeight="medium">Petugas Warehouse</MDTypography>}   
+                    {dataUser?.role === "petugasProduksi" && <MDTypography variant="subtitle2" fontWeight="medium">Petugas Produksi</MDTypography>}   
                   </Grid>
                 </Grid>
               </MDBox>

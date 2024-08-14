@@ -180,7 +180,7 @@ function App() {
           element={
             <ProtectedRoute
               element={<DashboardStaff />}
-              roles={["petugasLokasi", "picLokasi", "petugasWarehouse"]}
+              roles={["petugasLokasi", "picLokasi", "petugasWarehouse", "petugasProduksi"]}
             />
           }
         />
@@ -258,7 +258,7 @@ function App() {
           element={
             <ProtectedRoute
               element={<DetailPanen />}
-              roles={["admin"]}
+              roles={["admin", "petugasLokasi", "picLokasi", "petugasWarehouse", "petugasProduksi"]}
             />
           }
         />
@@ -266,7 +266,7 @@ function App() {
           element={
             <ProtectedRoute
               element={<IsiDataPanen />}
-              roles={["petugasLokasi"]}
+              roles={["petugasLokasi", "picLokasi"]}
             />
           }
         />
@@ -300,7 +300,7 @@ function App() {
           element={
             <ProtectedRoute
               element={<DetailProduksi />}
-              roles={["admin"]}
+              roles={["admin", "petugasLokasi", "picLokasi", "petugasWarehouse", "petugasProduksi"]}
             />
           }
         />
@@ -308,8 +308,7 @@ function App() {
           element={
             <ProtectedRoute
               element={<IsiDataProduk />}
-              // TODO: ILANGIN ADMIN NYA
-              roles={["petugasWarehouse"]}
+              roles={["petugasProduksi"]}
             />
           }
         />

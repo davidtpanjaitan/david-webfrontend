@@ -65,9 +65,13 @@ function IsiDataPanen() {
   const [jenisMadu, setJenisMadu] = useState('');
   const [beratPanen, setBeratPanen] = useState('');
   const [tanggalPanen, setTanggalPanen] = useState('');
+  const [jumlahDrum, setJumlahDrum] = useState('');
+  const [jumlahDirigen, setJumlahDirigen] = useState('');
   const [status, setStatus] = useState('');
 
   const petugasPanen = JSON.parse(localStorage.getItem("user"));
+  const role = localStorage.getItem("role");
+
   const [idPetugasPanen, setIdPetugasPanen] = useState('');
   const [namaPetugasPanen, setNamaPetugasPanen] = useState('');
   const [idPICPanen, setIdPICPanen] = useState('');
@@ -87,6 +91,8 @@ function IsiDataPanen() {
         setGambar(res.data.gambarPanenUrl);
         setStatus(res.data.status);
         setNamaLokasi(res.data.namaLokasi);
+        setJumlahDirigen(res.data.jumlahDirigen);
+        setJumlahDrum(res.data.jumlahDrum);
         
         if (res.data.tanggalPanen === "0001-01-01T00:00:00"){
           setTanggalPanen(dayjs().format('YYYY-MM-DDTHH:mm:ss'));
@@ -125,9 +131,17 @@ function IsiDataPanen() {
     fd.append('jenisMadu', jenisMadu);
     fd.append('beratPanen', beratPanen);
     fd.append('tanggalPanen', tanggalPanen);
-    fd.append('idPetugasPanen', petugasPanen.id);
-    fd.append('namaPetugasPanen', petugasPanen.name);
+    fd.append('jumlahDrum', jumlahDrum);
+    fd.append('jumlahDirigen', jumlahDirigen);
 
+    if (role === "picLokasi"){
+      fd.append('idPetugasPanen', idPetugasPanen);
+      fd.append('namaPetugasPanen', namaPetugasPanen);
+    } else {
+      fd.append('idPetugasPanen', petugasPanen.id);
+      fd.append('namaPetugasPanen', petugasPanen.name);
+    }
+    
     console.log(fd);
     return fd;
   }
@@ -149,9 +163,9 @@ function IsiDataPanen() {
   const validateForm = () => {
     const newErrors = {};
 
-    if (beratPanen === 0) {
+    if (beratPanen === 0 || beratPanen === null || beratPanen === undefined || beratPanen === '' || isNaN(beratPanen)) {
       newErrors.beratPanen = "Berat Panen tidak boleh kosong";
-    } else if (isNaN(beratPanen) || beratPanen <= 0) {
+    } else if (beratPanen < 0) {
       newErrors.beratPanen = 'Berat panen harus bilangan positif';
     }
 
@@ -161,6 +175,18 @@ function IsiDataPanen() {
 
     if (!tanggalPanen.trim()) {
       newErrors.tanggalPanen = "Tanggal Panen tidak boleh kosong";
+    }
+
+    if(jumlahDrum === null || jumlahDrum === undefined || jumlahDrum === '' || isNaN(jumlahDrum)){
+      setJumlahDrum(0);
+    } else if (jumlahDrum < 0) {
+      newErrors.jumlahDrum = 'Jumlah harus bilangan positif';
+    }
+
+    if (jumlahDirigen === null || jumlahDirigen === undefined || jumlahDirigen === '' || isNaN(jumlahDirigen)){
+      setJumlahDirigen(0);
+    } else if (jumlahDirigen < 0) {
+      newErrors.jumlahDirigen = 'Jumlah harus bilangan positif';
     }
 
     setErrors(newErrors);
@@ -243,7 +269,7 @@ function IsiDataPanen() {
                           <MDBadge badgeContent="DATA TERISI" color="warning" variant="contained" size="sm"/ >
                         }
                         {status === "PIC_APPROVED" && 
-                          <MDBadge badgeContent="DIKONFRIMASI PIC LAPANGAN" color="primary" variant="contained" size="sm"/ >
+                          <MDBadge badgeContent="DIKONFIRMASI PIC LAPANGAN" color="primary" variant="contained" size="sm"/ >
                         }
                         {status === "ADMIN_CONFIRMED" && 
                           <MDBadge badgeContent="DIKONFIRMASI ADMIN" color="success" variant="contained" size="sm"/ >
@@ -335,6 +361,30 @@ function IsiDataPanen() {
                       />
                     </LocalizationProvider>
                   </FormControl>
+                  </Grid>
+                  {/* Jumlah Drum */}
+                  <Grid item xs={12} md={9}>
+                    <MDInput 
+                      error={errors.jumlahDrum}
+                      helperText={errors.jumlahDrum ? errors.jumlahDrum : ""}
+                      name="jumlahDrum"
+                      type="number"
+                      label="Jumlah Drum" 
+                      value={jumlahDrum} 
+                      onChange={(e) => setJumlahDrum(e.target.value)} 
+                      fullWidth />
+                  </Grid>
+                  {/* Jumlah Jerigen */}
+                  <Grid item xs={12} md={9}>
+                    <MDInput 
+                      error={errors.jumlahDirigen}
+                      helperText={errors.jumlahDirigen ? errors.jumlahDirigen : ""}
+                      name="jumlahDirigen"
+                      type="number"
+                      label="Jumlah Jerigen" 
+                      value={jumlahDirigen} 
+                      onChange={(e) => setJumlahDirigen(e.target.value)} 
+                      fullWidth />
                   </Grid>
                   {/* Upload foto */}
                   <Grid item xs={12} md={9} display="grid">

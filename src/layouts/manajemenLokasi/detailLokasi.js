@@ -152,6 +152,30 @@ function DetailLokasi() {
                     <MDTypography variant="subtitle2" fontWeight="medium">{dataLokasi?.lokasiLengkap}</MDTypography>
                   </Grid>
                 </Grid>
+                {/* Jumlah Koloni Single */}
+                <Grid container spacing={3} align="left" ml={2}>
+                  <Grid item xs={4} md={4} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Jumlah Koloni Single</MDTypography>
+                  </Grid>
+                  <Grid item xs={1} md={1} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
+                  </Grid>
+                  <Grid item xs={7} md={7} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="medium">{dataLokasi?.jumlahKoloniSingle}</MDTypography>
+                  </Grid>
+                </Grid>
+                {/* Jumlah Koloni Super */}
+                <Grid container spacing={3} align="left" ml={2}>
+                  <Grid item xs={4} md={4} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Jumlah Koloni Super</MDTypography>
+                  </Grid>
+                  <Grid item xs={1} md={1} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
+                  </Grid>
+                  <Grid item xs={7} md={7} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="medium">{dataLokasi?.jumlahKoloniSuper}</MDTypography>
+                  </Grid>
+                </Grid>
               </MDBox>
               {/* Buttons */}
               <MDBox p={3} display="flex" justifyContent="center">

@@ -40,6 +40,8 @@ function EditLokasi() {
     namaPetani: '',
     koordinat: '',
     lokasiLengkap: '',
+    jumlahKoloniSingle: '',
+    jumlahKoloniSuper: '',
   });
 
   useEffect(() => {
@@ -96,6 +98,18 @@ function EditLokasi() {
       newErrors.lokasiLengkap = "Lokasi lengkap kosong";
     }
 
+    if(formData.jumlahKoloniSingle === null || formData.jumlahKoloniSingle === undefined || formData.jumlahKoloniSingle === '' || isNaN(formData.jumlahKoloniSingle)){
+      formData.jumlahKoloniSingle = 0;
+    } else if (formData.jumlahKoloniSingle < 0) {
+      newErrors.jumlahKoloniSingle = 'Jumlah harus bilangan positif';
+    }
+
+    if (formData.jumlahKoloniSuper === null || formData.jumlahKoloniSuper === undefined || formData.jumlahKoloniSuper === '' || isNaN(formData.jumlahKoloniSuper)){
+      formData.jumlahKoloniSuper = 0;
+    } else if (formData.jumlahKoloniSuper < 0) {
+      newErrors.jumlahKoloniSuper = 'Jumlah harus bilangan positif';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -111,6 +125,8 @@ function EditLokasi() {
         namaPetani: formData.namaPetani,
         koordinat: formData.koordinat,
         lokasiLengkap: formData.lokasiLengkap,
+        jumlahKoloniSingle: formData.jumlahKoloniSingle,
+        jumlahKoloniSuper: formData.jumlahKoloniSuper,
       });
       console.log("Lokasi berhasil diubah:", response.data);
       navigate(`/lokasi/${id}`);
@@ -189,6 +205,30 @@ function EditLokasi() {
                       onChange={handleChange} 
                       multiline
                       rows={4} 
+                      fullWidth />
+                  </Grid>
+                  {/* Jumlah Koloni Single */}
+                  <Grid item xs={12} md={9}>
+                    <MDInput 
+                      error={errors.jumlahKoloniSingle}
+                      helperText={errors.jumlahKoloniSingle ? errors.jumlahKoloniSingle : ""}
+                      name="jumlahKoloniSingle"
+                      type="number"
+                      label="Jumlah Koloni Single" 
+                      value={formData.jumlahKoloniSingle} 
+                      onChange={handleChange} 
+                      fullWidth />
+                  </Grid>
+                  {/* Jumlah Koloni Super */}
+                  <Grid item xs={12} md={9}>
+                    <MDInput 
+                      error={errors.jumlahKoloniSuper}
+                      helperText={errors.jumlahKoloniSuper ? errors.jumlahKoloniSuper : ""}
+                      name="jumlahKoloniSuper"
+                      type="number"
+                      label="Jumlah Koloni Super" 
+                      value={formData.jumlahKoloniSuper} 
+                      onChange={handleChange} 
                       fullWidth />
                   </Grid>
                 </Grid>

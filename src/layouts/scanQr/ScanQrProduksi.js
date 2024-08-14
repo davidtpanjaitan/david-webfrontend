@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast, Toaster } from "react-hot-toast";
 
 import QrScanner from 'react-qr-scanner';
 import QrScannerLib from 'qr-scanner';
@@ -28,23 +29,30 @@ function ScanQrProduksi() {
 
     const handleScan = useCallback((data) => {
       if (data) {
-          console.log(data);
-          const id = data.text || data;
-          setResult(data);
+        // console.log(data);
+        
+        const id = data.text || data;
+        setResult(data);
 
-          if (user.role === "petugasWarehouse"){
-            navigate(`/produksi/${id}/isi-data`)
-          } else {
-            navigate(`/produksi/${id}`)
-          }
+        if (!id.startsWith("PR")) {
+          toast.error("Kode QR bukan QR produk");
+          return;
+        }
 
-          setScanning(false);
-          setLegacyMode(false);
+        if (user.role === "petugasProduksi"){
+          navigate(`/produksi/${id}/isi-data`)
+        } else {
+          navigate(`/produksi/${id}`)
+        }
+
+        setScanning(false);
+        setLegacyMode(false);
       }
   }, [navigate]);
 
   const handleError = useCallback((err) => {
-      console.error(err);
+    console.error(err);
+    toast.error("Gagal melakukan scan QR");
   }, []);
   
     const previewStyle = {
@@ -79,8 +87,14 @@ function ScanQrProduksi() {
     };
 
     return(
-      <DashboardLayout>
+    <DashboardLayout>
       <DashboardNavbar />
+
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
+
       <MDBox mt={3} mb={3}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} lg={8}>

@@ -201,7 +201,7 @@ function AddUser() {
                         <MenuItem value={"petugasLokasi"}>Petugas Lapangan</MenuItem>
                         <MenuItem value={"picLokasi"}>PIC Lapangan</MenuItem>
                         <MenuItem value={"petugasWarehouse"}>Petugas Warehouse</MenuItem>
-                        {/* <MenuItem value={"petugasProduksi"}>Petugas Produksi</MenuItem> */}
+                        <MenuItem value={"petugasProduksi"}>Petugas Produksi</MenuItem>
                       </Select>
                       {errors.role && (
                         <StyledFormHelperText error >{errors.role ? "Role belum dipilih" : ""}</StyledFormHelperText>

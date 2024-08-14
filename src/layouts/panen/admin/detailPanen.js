@@ -41,6 +41,7 @@ function DetailPanen() {
   const [isLoading, setIsLoading] = useState(true);
 
   const approver = JSON.parse(localStorage.getItem("user"));
+  const role = localStorage.getItem("role");
 
   useEffect(() => {
     axios
@@ -51,9 +52,8 @@ function DetailPanen() {
       .catch((err) => console.log(err))
       .finally(() => {
         setIsLoading(false);
-        console.log(dataPanen);
-        console.log(dataPanen.gambarPanenUrl)
       });
+
   }, []);
 
   const formatDate = (dateString) => {
@@ -169,7 +169,7 @@ function DetailPanen() {
                       <MDBadge badgeContent="DATA TERISI" color="warning" variant="contained" size="sm"/ >
                     }
                     {dataPanen?.status === "PIC_APPROVED" && 
-                      <MDBadge badgeContent="DIKONFRIMASI PIC LAPANGAN" color="primary" variant="contained" size="sm"/ >
+                      <MDBadge badgeContent="DIKONFIRMASI PIC LAPANGAN" color="primary" variant="contained" size="sm"/ >
                     }
                     {dataPanen?.status === "ADMIN_CONFIRMED" && 
                       <MDBadge badgeContent="DIKONFIRMASI ADMIN" color="success" variant="contained" size="sm"/ >
@@ -222,7 +222,39 @@ function DetailPanen() {
                   {dataPanen?.beratPanen ? (
                     <MDTypography variant="subtitle2" fontWeight="medium">{dataPanen?.beratPanen} kg</MDTypography>
                   ):(
-                    <MDTypography variant="subtitle2" fontWeight="medium">—</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="medium">0 kg</MDTypography>
+                  )}
+                  </Grid>
+                </Grid>
+                {/* Jumlah Drum */}
+                <Grid container spacing={3} align="left" ml={2}>
+                  <Grid item xs={4} md={4} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Jumlah Drum</MDTypography>
+                  </Grid>
+                  <Grid item xs={1} md={1} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
+                  </Grid>
+                  <Grid item xs={7} md={7} mb={2}>
+                  {dataPanen?.jumlahDrum ? (
+                    <MDTypography variant="subtitle2" fontWeight="medium">{dataPanen?.jumlahDrum}</MDTypography>
+                  ):(
+                    <MDTypography variant="subtitle2" fontWeight="medium">0</MDTypography>
+                  )}
+                  </Grid>
+                </Grid>
+                {/* Jumlah Dirigen */}
+                <Grid container spacing={3} align="left" ml={2}>
+                  <Grid item xs={4} md={4} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Jumlah Jerigen</MDTypography>
+                  </Grid>
+                  <Grid item xs={1} md={1} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
+                  </Grid>
+                  <Grid item xs={7} md={7} mb={2}>
+                  {dataPanen?.jumlahDirigen ? (
+                    <MDTypography variant="subtitle2" fontWeight="medium">{dataPanen?.jumlahDirigen}</MDTypography>
+                  ):(
+                    <MDTypography variant="subtitle2" fontWeight="medium">0</MDTypography>
                   )}
                   </Grid>
                 </Grid>
@@ -382,12 +414,19 @@ function DetailPanen() {
                
               </MDBox>
               {/* Buttons */}
-              <MDBox p={3} display="flex" justifyContent="center">
+              <MDBox p={3} mt={2} display="flex" justifyContent="center">
                 <MDButton variant="gradient" color="secondary" style={{ width: '100px' }} onClick={handleButtonKembali}>Kembali</MDButton>
-                <MDButton disabled={dataPanen.status!=="ARRIVED_WAREHOUSE"} variant="gradient" color="primary" style={{ marginLeft: '10px' }} onClick={handleButtonKonfirmasi}>Konfirmasi</MDButton>
 
-                {dataPanen?.status === "GENERATED" && 
-                  <MDButton variant="gradient" color="error" style={{ width: '100px', marginLeft: '10px' }} onClick={handleButtonHapus}>Hapus</MDButton>
+                {role === "admin" &&
+                <>
+                  {dataPanen?.status === "ARRIVED_WAREHOUSE" &&
+                    <MDButton variant="gradient" color="primary" style={{ marginLeft: '10px' }} onClick={handleButtonKonfirmasi}>Konfirmasi</MDButton>
+                  }
+                  
+                  {dataPanen?.status === "GENERATED" && 
+                    <MDButton variant="gradient" color="error" style={{ width: '100px', marginLeft: '10px' }} onClick={handleButtonHapus}>Hapus</MDButton>
+                  }
+                  </>
                 }
                 
               </MDBox>

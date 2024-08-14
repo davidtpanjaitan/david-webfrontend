@@ -37,6 +37,8 @@ function AddLokasi() {
     namaPetani: '',
     koordinat: '',
     lokasiLengkap: '',
+    jumlahKoloniSingle: '',
+    jumlahKoloniSuper: '',
   });
 
   const handleChange = (e) => {
@@ -80,6 +82,18 @@ function AddLokasi() {
       newErrors.lokasiLengkap = "Lokasi lengkap kosong";
     }
 
+    if(formData.jumlahKoloniSingle === null || formData.jumlahKoloniSingle === undefined || formData.jumlahKoloniSingle === '' || isNaN(formData.jumlahKoloniSingle)){
+      formData.jumlahKoloniSingle = 0;
+    } else if (formData.jumlahKoloniSingle < 0) {
+      newErrors.jumlahKoloniSingle = 'Jumlah harus bilangan positif';
+    }
+
+    if (formData.jumlahKoloniSuper === null || formData.jumlahKoloniSuper === undefined || formData.jumlahKoloniSuper === '' || isNaN(formData.jumlahKoloniSuper)){
+      formData.jumlahKoloniSuper = 0;
+    } else if (formData.jumlahKoloniSuper < 0) {
+      newErrors.jumlahKoloniSuper = 'Jumlah harus bilangan positif';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -95,6 +109,8 @@ function AddLokasi() {
         namaPetani: formData.namaPetani,
         koordinat: formData.koordinat,
         lokasiLengkap: formData.lokasiLengkap,
+        jumlahKoloniSingle: formData.jumlahKoloniSingle,
+        jumlahKoloniSuper: formData.jumlahKoloniSuper,
       });
       console.log("Lokasi berhasil disimpan:", response.data);
       navigate('/lokasi');
@@ -142,9 +158,9 @@ function AddLokasi() {
                   <Grid item xs={12} md={9}>
                     <MDInput 
                       error={errors.namaPetani}
-                      helperText={errors.namaPetani ? "Nama petani tidak boleh kosong" : ""}
+                      helperText={errors.namaPetani ? "Nama penanggung jawab tidak boleh kosong" : ""}
                       name="namaPetani"
-                      label="Nama Petani" 
+                      label="Nama Penanggung Jawab" 
                       value={formData.namaPetani} 
                       onChange={handleChange} 
                       fullWidth />
@@ -171,7 +187,32 @@ function AddLokasi() {
                       rows={4} 
                       fullWidth />
                   </Grid>
+                  {/* Jumlah Koloni Single */}
+                  <Grid item xs={12} md={9}>
+                    <MDInput 
+                      error={errors.jumlahKoloniSingle}
+                      helperText={errors.jumlahKoloniSingle ? errors.jumlahKoloniSingle : ""}
+                      name="jumlahKoloniSingle"
+                      type="number"
+                      label="Jumlah Koloni Single" 
+                      value={formData.jumlahKoloniSingle} 
+                      onChange={handleChange} 
+                      fullWidth />
+                  </Grid>
+                  {/* Jumlah Koloni Super */}
+                  <Grid item xs={12} md={9}>
+                    <MDInput 
+                      error={errors.jumlahKoloniSuper}
+                      helperText={errors.jumlahKoloniSuper ? errors.jumlahKoloniSuper : ""}
+                      name="jumlahKoloniSuper"
+                      type="number"
+                      label="Jumlah Koloni Super" 
+                      value={formData.jumlahKoloniSuper} 
+                      onChange={handleChange} 
+                      fullWidth />
+                  </Grid>
                 </Grid>
+               
               </MDBox>
               <MDBox p={3} display="flex" justifyContent="center">
                 <MDButton variant="gradient" color="secondary" style={{ marginRight: '10px' }} onClick={(handleButtonKembali)}>Kembali</MDButton>

@@ -13,6 +13,7 @@ import Modal from "@mui/material/Modal";
 import Divider from "@mui/material/Divider";
 import Slide from "@mui/material/Slide";
 import Icon from "@mui/material/Icon";
+import IconButton from '@mui/material/IconButton';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper  } from '@mui/material';
 
 import { FormControl, FormHelperText } from '@mui/material';
@@ -113,6 +114,10 @@ function IsiDataProduk() {
     navigate(-1);
   }
 
+  const handleButtonDeletePanen = (id) => {
+    setListPanen(prevListPanen => prevListPanen.filter(panen => panen.id !== id));
+  }
+
   const handleButtonSimpan = (e) => {
     e.preventDefault();
 
@@ -132,21 +137,35 @@ function IsiDataProduk() {
 
       try {
         const response = await axios.get(`${baseUrl}/panen/${result.text}`);
-        
-        setScannedPanen(response.data);
-        // console.log(scannedPanen);
+
+        const panenData = response.data;
+        setScannedPanen(panenData);
+
+        toggleQRScanner();
+        setShowConfirmation(true);
+
       } catch (error) {
         console.error('Error:', error);
       }
-      
-      toggleQRScanner();
-      setShowConfirmation(true);
     }
   };
 
   const handleConfirm = () => {
     console.log(scannedPanen);
+
+    const isPanenInList = listPanen.some(panen => panen.id === scannedPanen.id);
+    if (isPanenInList) {
+      toast.error("Panen sudah ada di tabel komposisi madu");
+      handleCancel();
+      return; 
+    }
     
+    if (scannedPanen.status !== "ADMIN_CONFIRMED"){
+      toast.error("Status panen belum dikonfirmasi admin");
+      handleCancel();
+      return; 
+    }
+
     setListPanen(prevData => [...prevData, scannedPanen]);
     setShowConfirmation(false);
     setScannedPanen('');
@@ -173,7 +192,7 @@ function IsiDataProduk() {
     if (listPanen.length === 0){
       newErrors.listPanen = "Komposisi madu tidak boleh kosong"
     } else {
-      const hasZeroWeight = listPanen.some(panen => panen.berat === 0);
+      const hasZeroWeight = listPanen.some(panen => panen.berat === 0 || panen.berat === null || panen.berat === undefined || panen.berat === '' || isNaN(panen.berat));
       if (hasZeroWeight) {
       newErrors.listPanen = "Berat panen tidak boleh kosong";
     }
@@ -193,12 +212,7 @@ function IsiDataProduk() {
 
   const confirmSubmit = async (e) => {
     setShowModal(false);
-    // setIsLoading(true);
-    console.log(nama);
-    console.log(idPetugasMixing);
-    console.log(namaPetugasMixing);
-    console.log(tanggal);
-    console.log(listPanen);
+    
     try {
       const response = await axios.put(`${baseUrl}/produk/${id}`, {
         id,
@@ -241,7 +255,7 @@ function IsiDataProduk() {
           <Grid item xs={12} lg={8}>
             <Card>
               <MDBox p={3}>
-                <MDTypography variant="h4" align="center">Data Pengajuan Produksi</MDTypography>
+                <MDTypography variant="h4" align="center">Data Mixing Produk</MDTypography>
               </MDBox>
               <MDBox pt={2} px={5}>
                 <Grid container spacing={3} justifyContent='center'>
@@ -271,8 +285,8 @@ function IsiDataProduk() {
                   {/* Petugas Mixing Produk */}
                   <Grid item xs={12} md={9}>
                     {namaPetugasMixing ? (
-                      <MDTypography variant="subtitle2" fontWeight="regular">Petugas Produksi&nbsp;:
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{namaPetugasMixing}
+                      <MDTypography variant="subtitle2" fontWeight="regular">Petugas Produksi&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;{namaPetugasMixing}
+                        
                       </MDTypography>
                     ):(
                       <MDTypography variant="subtitle2" fontWeight="regular">Petugas Produksi&nbsp;&nbsp;&nbsp;&nbsp;:
@@ -326,6 +340,9 @@ function IsiDataProduk() {
                             <TableCell align="center">
                               <MDTypography variant="body2" fontWeight="regular">Berat Dipakai</MDTypography>
                             </TableCell>
+                            <TableCell align="center">
+                              {/* <MDTypography variant="body2" fontWeight="regular">Berat Dipakai</MDTypography> */}
+                            </TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -348,6 +365,12 @@ function IsiDataProduk() {
                                     value={panen.berat || ''}
                                     onChange={(e) => handleInputChange(panen.id, e.target.value)}
                                   />
+                                  
+                              </TableCell>
+                              <TableCell>
+                                <IconButton size="small" aria-label="delete" color="error" onClick={() => handleButtonDeletePanen(panen.id)}>
+                                    <Icon fontSize="small">delete</Icon>
+                                  </IconButton>
                               </TableCell>
                             </TableRow>
                           ))}
@@ -361,7 +384,7 @@ function IsiDataProduk() {
                   {/* Tombol Scan QR */}
                   <Grid item xs={12} md={9} align="right">
                     <MDButton variant="gradient" color="secondary" onClick={toggleQRScanner}>
-                      Scan QR
+                      + Scan QR
                     </MDButton>
                   </Grid>
 

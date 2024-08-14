@@ -85,6 +85,8 @@ function KonfirmasiLapangan() {
   const [namaPetugasPanen, setNamaPetugasPanen] = useState('');
   const [idPICPanen, setIdPICPanen] = useState('');
   const [namaPICPanen, setNamaPICPanen] = useState('');
+  const [jumlahDrum, setJumlahDrum] = useState('');
+  const [jumlahDirigen, setJumlahDirigen] = useState('');
 
   const approver = JSON.parse(localStorage.getItem("user"));
 
@@ -102,6 +104,8 @@ function KonfirmasiLapangan() {
         setGambarPanenUrl(res.data.gambarPanenUrl);
         setStatus(res.data.status);
         setNamaLokasi(res.data.namaLokasi);
+        setJumlahDirigen(res.data.jumlahDirigen);
+        setJumlahDrum(res.data.jumlahDrum);
       })
       .catch((err) => console.log(err))
       .finally(() => {
@@ -114,6 +118,10 @@ function KonfirmasiLapangan() {
     navigate(-1);
   }
 
+  const handleButtonUbah = () => {
+    navigate(`/panen/${id}/isi-data`);
+  }
+
   const handleButtonKonfirmasi = (e) => {
     e.preventDefault();
 
@@ -124,15 +132,14 @@ function KonfirmasiLapangan() {
     setShowModal(false);
     // setIsLoading(true);
 
-    console.log(approver.id);
-    console.log(approver.name);
     try {
       const response = await axios.put(`${baseUrl}/panen/${id}/approve-lokasi`, {
         approve: true,
         idApprover: approver.id,
         namaApprover: approver.name,
-      }
+        }
       );
+
       console.log("Data panen berhasil dikonfirmasi:", response.data);
       navigate('/');
 
@@ -198,7 +205,7 @@ function KonfirmasiLapangan() {
                           <MDBadge badgeContent="DATA TERISI" color="warning" variant="contained" size="sm"/ >
                         }
                         {status === "PIC_APPROVED" && 
-                          <MDBadge badgeContent="DIKONFRIMASI PIC LAPANGAN" color="primary" variant="contained" size="sm"/ >
+                          <MDBadge badgeContent="DIKONFIRMASI PIC LAPANGAN" color="primary" variant="contained" size="sm"/ >
                         }
                         {status === "ADMIN_CONFIRMED" && 
                           <MDBadge badgeContent="DIKONFIRMASI ADMIN" color="success" variant="contained" size="sm"/ >
@@ -286,6 +293,28 @@ function KonfirmasiLapangan() {
                     </LocalizationProvider>
                   </FormControl>
                   </Grid>
+                  {/* Jumlah Drum */}
+                  <Grid item xs={12} md={9}>
+                    <MDInput 
+                      disabled
+                      name="jumlahDrum"
+                      type="number"
+                      label="Jumlah Drum" 
+                      value={jumlahDrum} 
+                      // onChange={(e) => setJumlahDrum(e.target.value)} 
+                      fullWidth />
+                  </Grid>
+                  {/* Jumlah Jerigen */}
+                  <Grid item xs={12} md={9}>
+                    <MDInput 
+                      disabled
+                      name="jumlahDirigen"
+                      type="number"
+                      label="Jumlah Jerigen" 
+                      value={jumlahDirigen} 
+                      // onChange={(e) => setJumlahDirigen(e.target.value)} 
+                      fullWidth />
+                  </Grid>
                   {/* Upload foto */}
                   {gambarPanenUrl && (
                   <Grid item xs={12} md={9} display="grid">
@@ -299,6 +328,7 @@ function KonfirmasiLapangan() {
               </MDBox>
               <MDBox p={3} display="flex" justifyContent="center">
                 <MDButton variant="gradient" color="secondary" style={{ marginRight: '10px' }} onClick={handleButtonKembali}>Kembali</MDButton>
+                <MDButton variant="gradient" color="warning" style={{ width: '100px' }} onClick={handleButtonUbah}>Ubah</MDButton>
                 <MDButton 
                   disabled={status !== "SUBMITTED"} 
                   type="submit" 

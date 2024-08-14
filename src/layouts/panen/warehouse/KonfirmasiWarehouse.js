@@ -50,6 +50,8 @@ function KonfirmasiWarehouse() {
   const [jenisMadu, setJenisMadu] = useState('');
   const [namaPetugasPanen, setNamaPetugasPanen] = useState('');
   const [namaPICPanen, setNamaPICPanen] = useState('');
+  const [jumlahDrum, setJumlahDrum] = useState('');
+  const [jumlahDirigen, setJumlahDirigen]  = useState('');
 
   const approver = JSON.parse(localStorage.getItem("user"));
   const [idPetugasWarehouse, setIdPetugasWarehouse] = useState('');
@@ -73,6 +75,8 @@ function KonfirmasiWarehouse() {
         setGambar(res.data.gambarWarehouseUrl);
         setStatus(res.data.status);
         setNamaLokasi(res.data.namaLokasi);
+        setJumlahDrum(res.data.jumlahDrum);
+        setJumlahDirigen(res.data.jumlahDirigen);
       })
       .catch((err) => console.log(err))
       .finally(() => {
@@ -221,7 +225,7 @@ function KonfirmasiWarehouse() {
                           <MDBadge badgeContent="DATA TERISI" color="warning" variant="contained" size="sm"/ >
                         }
                         {status === "PIC_APPROVED" && 
-                          <MDBadge badgeContent="DIKONFRIMASI PIC LAPANGAN" color="primary" variant="contained" size="sm"/ >
+                          <MDBadge badgeContent="DIKONFIRMASI PIC LAPANGAN" color="primary" variant="contained" size="sm"/ >
                         }
                         {status === "ADMIN_CONFIRMED" && 
                           <MDBadge badgeContent="DIKONFIRMASI ADMIN" color="success" variant="contained" size="sm"/ >
@@ -232,6 +236,42 @@ function KonfirmasiWarehouse() {
                       </span>
                     </MDTypography>
                   </Grid>
+                  {/* Tanggal Panen */}
+                  <Grid item xs={12} md={9}>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Tanggal Panen&nbsp;
+                      :
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      {format(new Date(tanggalPanen), "dd-MM-yyyy")}
+                    </MDTypography>
+                  </Grid>
+                  
+                  {/* Berat Panen */}
+                  <Grid item xs={12} md={9}>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Berat Panen
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      :
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      {beratPanen} kg
+                    </MDTypography>
+                  </Grid>
+                  {/* Jumlah Drum */}
+                  <Grid item xs={12} md={9}>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Jumlah Drum
+                      &nbsp;&nbsp;&nbsp;
+                      :
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      {jumlahDrum}
+                    </MDTypography>
+                  </Grid>
+                  {/* Jumlah Jerigen */}
+                  <Grid item xs={12} md={9}>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Jumlah Jerigen&nbsp;
+                      :
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      {jumlahDirigen}
+                    </MDTypography>
+                  </Grid>
+
                   {/* Petugas Panen */}
                   <Grid item xs={12} md={9}>
                     {namaPetugasPanen ? (
@@ -258,24 +298,6 @@ function KonfirmasiWarehouse() {
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—
                       </MDTypography>
                     )}
-                  </Grid>
-                  {/* Berat Panen */}
-                  <Grid item xs={12} md={9}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Berat Panen
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      :
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      {beratPanen} kg
-                    </MDTypography>
-                  </Grid>
-                  {/* Tanggal Panen */}
-                  <Grid item xs={12} md={9}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Tanggal Panen
-                    &nbsp;
-                      :
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      {format(new Date(tanggalPanen), "dd-MM-yyyy")}
-                    </MDTypography>
                   </Grid>
                   {/* Petugas Warehouse */}
                   <Grid item xs={12} md={9}>

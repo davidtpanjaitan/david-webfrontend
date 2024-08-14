@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast, Toaster } from "react-hot-toast";
 
 import QrScanner from 'react-qr-scanner';
 import QrScannerLib from 'qr-scanner';
@@ -28,27 +29,33 @@ function ScanQrPanen() {
 
     const handleScan = useCallback((data) => {
       if (data) {
-          console.log(data);
-          const id = data.text || data;
-          setResult(id);
+        console.log(data);
+        const id = data.text || data;
+        setResult(id);
 
-          if (user.role === "admin"){
-            navigate(`/panen/${id}`)
-          } else if (user.role === "petugasLokasi"){
-            navigate(`/panen/${id}/isi-data`)
-          } else if (user.role === "picLokasi"){
-            navigate(`/panen/${id}/konfirmasi-lapangan`)
-          } else if (user.role === "petugasWarehouse"){
-            navigate(`/panen/${id}/konfirmasi-warehouse`)
-          }
+        if (!id.startsWith("PN")) {
+          toast.error("Kode QR bukan QR panen");
+          return;
+        }
 
-          setScanning(false);
-          setLegacyMode(false);
+        if (user.role === "petugasLokasi"){
+          navigate(`/panen/${id}/isi-data`)
+        } else if (user.role === "picLokasi"){
+          navigate(`/panen/${id}/konfirmasi-lapangan`)
+        } else if (user.role === "petugasWarehouse"){
+          navigate(`/panen/${id}/konfirmasi-warehouse`)
+        } else {
+          navigate(`/panen/${id}`)
+        }
+
+        setScanning(false);
+        setLegacyMode(false);
       }
   }, [navigate]);
 
   const handleError = useCallback((err) => {
-      console.error(err);
+    console.error(err);
+    toast.error("Gagal melakukan scan QR");
   }, []);
   
   const previewStyle = {
@@ -85,6 +92,12 @@ function ScanQrPanen() {
     return(
     <DashboardLayout>
         <DashboardNavbar />
+
+        <Toaster
+        position="top-center"
+        reverseOrder={false}
+        />
+
         <MDBox mt={3} mb={3}>
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} lg={8}>
