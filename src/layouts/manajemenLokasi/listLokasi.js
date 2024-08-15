@@ -1,4 +1,7 @@
-
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast, Toaster } from "react-hot-toast";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -18,30 +21,44 @@ import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import Footer from "../../examples/Footer";
 import DataTable from "../../examples/Tables/DataTable";
 
-function ListLokasi() {
+// Data
+import ListLokasiTable from "./data/ListLokasiTable";
 
-    const handleButtonClick = () => {
-        console.log("Button clicked!");
+function ListLokasi() {
+    const navigate = useNavigate();
+
+    const handleButtonTambahLokasi = () => {
+        navigate("/lokasi/tambah")
     };
 
     return (
         <DashboardLayout>
-        <DashboardNavbar />
-        <MDBox pt={3} pb={3}>
-            <Grid item xs={12} container justifyContent="center">
-            <MDTypography variant="h2">Daftar Lokasi Panen</MDTypography>
-            </Grid>
-            <Grid item xs={12} container justifyContent="center" spacing={2} pt={3} pb={3}>
-            <Grid item>
-                <MDButton variant="gradient" color="primary" onClick={handleButtonClick}>
-                + Tambah Lokasi
-                </MDButton>
-            </Grid>
-            </Grid>
-            
-            
-        </MDBox>
-        {/* <Footer /> */}
+            <DashboardNavbar />
+
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+            />
+
+            <MDBox pt={3} pb={3}>
+                <Grid item xs={12} container justifyContent="center">
+                    <MDTypography variant="h2">Daftar Lokasi Panen</MDTypography>
+                </Grid>
+                <Grid item xs={12} container justifyContent="center" spacing={2} pt={3} pb={3}>
+                    <Grid item>
+                        <MDButton variant="gradient" color="primary" onClick={handleButtonTambahLokasi}>
+                            + Tambah Lokasi
+                        </MDButton>
+                    </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                    <Card>
+                        <MDBox pt={3}>
+                            <ListLokasiTable />
+                        </MDBox>
+                    </Card>
+                </Grid>
+            </MDBox>
         </DashboardLayout>
     );
 }

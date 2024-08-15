@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from "react-router-dom";
-import { toast, Toaster } from "react-hot-toast";
 import ReactLoading from "react-loading";
+import { toast, Toaster } from "react-hot-toast";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -29,18 +29,20 @@ function DetailLokasi() {
   const baseUrl = "https://david-test-webapp.azurewebsites.net/api";
   const navigate = useNavigate();
   const { id } = useParams();
-  const [dataLokasi, setDataLokasi] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [dataUser, setDataUser] = useState('');
 
   const [showModal, setShowModal] = useState(false);
   const toggleModal = () => setShowModal(!showModal);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const token = localStorage.getItem("token");
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
   useEffect(() => {
-    // setIsLoading(true);
     axios
-      .get(`${baseUrl}/lokasi/${id}`)
+      .get(`${baseUrl}/user/${id}`)
       .then((res) => {
-        setDataLokasi(res.data);
+        setDataUser(res.data);
       })
       .catch((err) => console.log(err))
       .finally(() => {
@@ -49,17 +51,17 @@ function DetailLokasi() {
   }, []);
 
   const handleButtonKembali = () => {
-    navigate("/lokasi");
+    navigate(-1);
   }
 
   const handleButtonUbah = () => {
-    navigate(`/lokasi/${id}/ubah`);
+    navigate(`/user/${id}/ubah`);
   }
 
   const handleButtonHapus = (e) => {
     e.preventDefault();
 
-      setShowModal(true);
+    setShowModal(true);
   };
 
   const confirmSubmit = async (e) => {
@@ -67,15 +69,15 @@ function DetailLokasi() {
     // setIsLoading(true);
 
     try {
-      const response = await axios.delete(`${baseUrl}/lokasi/${id}`);
-      console.log("Lokasi berhasil dihapus:", response.data);
-      navigate('/lokasi');
+      const response = await axios.delete(`${baseUrl}/user/${id}`);
+      console.log("User berhasil dihapus:", response.data);
+      navigate('/user');
 
       await new Promise((resolve) => setTimeout(resolve, 500));
-      toast.success("Lokasi berhasil dihapus");
+      toast.success("User berhasil dihapus");
     } catch (error) {
       console.error('Error:', error);
-      toast.error("Lokasi gagal dihapus");
+      toast.error("User gagal dihapus");
     }
     // } finally {
     //   setIsLoading(false); 
@@ -101,79 +103,59 @@ function DetailLokasi() {
           <Grid item xs={12} lg={8}>
             <Card>
               <MDBox p={3}>
-                <MDTypography variant="h4" align="center">Detail Lokasi</MDTypography>
+                <MDTypography variant="h4" align="center">Detail User</MDTypography>
               </MDBox>
               <MDBox pt={2} px={5} align="center">
-                {/* Nama Lokasi */}
+                {/* Employee ID */}
                 <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Nama Lokasi</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="regular">NIK</MDTypography>
                   </Grid>
                   <Grid item xs={1} md={1} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="medium">{dataLokasi?.namaLokasi}</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="medium">{dataUser?.employeeId}</MDTypography>
                   </Grid>
                 </Grid>
-                {/* Nama Petani */}
+                {/* Nama */}
                 <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Nama Petani</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Nama</MDTypography>
                   </Grid>
                   <Grid item xs={1} md={1} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="medium">{dataLokasi?.namaPetani}</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="medium">{dataUser?.name}</MDTypography>
                   </Grid>
                 </Grid>
-                {/* Koordinat */}
+                {/* Username */}
                 <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Koordinat</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Username</MDTypography>
                   </Grid>
                   <Grid item xs={1} md={1} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="medium">{dataLokasi?.koordinat}</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="medium">{dataUser?.username}</MDTypography>
                   </Grid>
                 </Grid>
-                {/* Lokasi Lengkap */}
+                {/* Role */}
                 <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Lokasi Lengkap</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Role</MDTypography>
                   </Grid>
                   <Grid item xs={1} md={1} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
                   </Grid>
                   <Grid item xs={7} md={7} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="medium">{dataLokasi?.lokasiLengkap}</MDTypography>
-                  </Grid>
-                </Grid>
-                {/* Jumlah Koloni Single */}
-                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
-                  <Grid item xs={4} md={4} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Jumlah Koloni Single</MDTypography>
-                  </Grid>
-                  <Grid item xs={1} md={1} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
-                  </Grid>
-                  <Grid item xs={7} md={7} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="medium">{dataLokasi?.jumlahKoloniSingle}</MDTypography>
-                  </Grid>
-                </Grid>
-                {/* Jumlah Koloni Super */}
-                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
-                  <Grid item xs={4} md={4} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Jumlah Koloni Super</MDTypography>
-                  </Grid>
-                  <Grid item xs={1} md={1} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
-                  </Grid>
-                  <Grid item xs={7} md={7} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="medium">{dataLokasi?.jumlahKoloniSuper}</MDTypography>
+                    {dataUser?.role === "admin" && <MDTypography variant="subtitle2" fontWeight="medium">Admin</MDTypography>}
+                    {dataUser?.role === "petugasLokasi" && <MDTypography variant="subtitle2" fontWeight="medium">Petugas Lapangan</MDTypography>}
+                    {dataUser?.role === "picLokasi" && <MDTypography variant="subtitle2" fontWeight="medium">PIC Lapangan</MDTypography>}
+                    {dataUser?.role === "petugasWarehouse" && <MDTypography variant="subtitle2" fontWeight="medium">Petugas Warehouse</MDTypography>}   
+                    {dataUser?.role === "petugasProduksi" && <MDTypography variant="subtitle2" fontWeight="medium">Petugas Produksi</MDTypography>}   
                   </Grid>
                 </Grid>
               </MDBox>
@@ -206,12 +188,12 @@ function DetailLokasi() {
               <Divider sx={{ my: 0 }} />
               <MDBox p={2} my={3}>
                 <MDTypography variant="body2" color="secondary" fontWeight="regular" align="center">
-                  Apakah Anda yakin untuk menghapus lokasi?
+                  Apakah Anda yakin untuk menghapus user?
                 </MDTypography>
               </MDBox>
               <Divider sx={{ my: 0 }} />
               <MDBox display="flex" justifyContent="space-between" p={1.5}>
-                <MDButton variant="gradient" color="secondary" size="large" onClick={toggleModal}>
+                <MDButton variant="gradient" color="secondary" onClick={toggleModal}>
                   Batal
                 </MDButton>
                 <MDButton variant="gradient" color="error" onClick={confirmSubmit}>

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from "react-router-dom";
-import dayjs from 'dayjs';
-import { toast, Toaster } from "react-hot-toast";
+import { format } from "date-fns";
 import ReactLoading from "react-loading";
+import { toast, Toaster } from "react-hot-toast";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -12,45 +12,23 @@ import Modal from "@mui/material/Modal";
 import Divider from "@mui/material/Divider";
 import Slide from "@mui/material/Slide";
 import Icon from "@mui/material/Icon";
-import { Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/material';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 // Material Dashboard 2 React components
 import MDBox from "../../../components/MDBox";
 import MDTypography from "../../../components/MDTypography";
 import MDButton from "../../../components/MDButton";
 import MDInput from "../../../components/MDInput";
+import MDBadge from '../../../components/MDBadge';
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "../../../examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
-import pxToRem from '../../../assets/theme/functions/pxToRem';
-import { styled } from '@mui/system';
-import MDBadge from '../../../components/MDBadge';
+import Footer from "../../../examples/Footer";
 
-const StyledFormControl = styled(FormControl)(({ theme }) => ({
-  "& .MuiOutlinedInput-notchedOutline" : {
-    borderColor: "#ced4da", 
-  },
-  "& .Mui-error .MuiOutlinedInput-notchedOutline" : {
-    borderColor: "#ced4da !important", 
-  },
-}));
-
-const StyledFormHelperText = styled(FormHelperText)(({ theme }) => ({
-  "fontFamily" : 'Roboto',
-  "fontSize": pxToRem(12), 
-  "fontWeight": 400, 
-  "color": "red",
-}));
-
-function IsiDataPanen() {
+function KonfirmasiWarehouse() {
   const baseUrl = "https://david-test-webapp.azurewebsites.net/api";
   const { id } = useParams();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
 
   const token = localStorage.getItem("token");
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -58,24 +36,27 @@ function IsiDataPanen() {
   const [showModal, setShowModal] = useState(false);
   const toggleModal = () => setShowModal(!showModal);
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   const [namaLokasi, setNamaLokasi] = useState('');
   const [gambar, setGambar] = useState('');
   const [isUploadGambarBaru, setIsUploadGambarBaru] = useState(false);
-  const [jenisMadu, setJenisMadu] = useState('');
   const [beratPanen, setBeratPanen] = useState('');
   const [tanggalPanen, setTanggalPanen] = useState('');
-  const [jumlahDrum, setJumlahDrum] = useState('');
-  const [jumlahDirigen, setJumlahDirigen] = useState('');
+  const [beratWarehouse, setBeratWarehouse] = useState('');
+  const [tanggalWarehouse, setTanggalWarehouse] = useState('');
   const [status, setStatus] = useState('');
-
-  const petugasPanen = JSON.parse(localStorage.getItem("user"));
-  const role = localStorage.getItem("role");
-
-  const [idPetugasPanen, setIdPetugasPanen] = useState('');
+  const [catatanWarehouse, setCatatanWarehouse] = useState('');
+  const [jenisMadu, setJenisMadu] = useState('');
   const [namaPetugasPanen, setNamaPetugasPanen] = useState('');
-  const [idPICPanen, setIdPICPanen] = useState('');
   const [namaPICPanen, setNamaPICPanen] = useState('');
+  const [jumlahDrum, setJumlahDrum] = useState('');
+  const [jumlahDirigen, setJumlahDirigen]  = useState('');
+
+  const approver = JSON.parse(localStorage.getItem("user"));
+  const [idPetugasWarehouse, setIdPetugasWarehouse] = useState('');
+  const [namaPetugasWarehouse, setNamaPetugasWarehouse] = useState('');
+
 
   useEffect(() => {
     axios
@@ -83,22 +64,19 @@ function IsiDataPanen() {
       .then((res) => {
         setJenisMadu(res.data.jenisMadu);
         setBeratPanen(res.data.beratPanen);
-        // setTanggalPanen(res.data.tanggalPanen);
-        setIdPetugasPanen(res.data.idPetugasPanen);
-        setNamaPetugasPanen(res.data.namaPetugasPanen);
-        setIdPICPanen(res.data.idPICPanen);
+        setTanggalPanen((res.data.tanggalPanen));
         setNamaPICPanen(res.data.namaPICPanen);
-        setGambar(res.data.gambarPanenUrl);
+        setNamaPetugasPanen(res.data.namaPetugasPanen);
+        setBeratWarehouse(res.data.beratWarehouse);
+        setTanggalWarehouse(res.data.tanggalWarehouse);
+        setCatatanWarehouse(res.data.catatanWarehouse);
+        setIdPetugasWarehouse(res.data.idPetugasWarehouse);
+        setNamaPetugasWarehouse(res.data.namaPetugasWarehouse);
+        setGambar(res.data.gambarWarehouseUrl);
         setStatus(res.data.status);
         setNamaLokasi(res.data.namaLokasi);
-        setJumlahDirigen(res.data.jumlahDirigen);
         setJumlahDrum(res.data.jumlahDrum);
-        
-        if (res.data.tanggalPanen === "0001-01-01T00:00:00"){
-          setTanggalPanen(dayjs().format('YYYY-MM-DDTHH:mm:ss'));
-        } else {
-          setTanggalPanen(dayjs(res.data.tanggalPanen).format('YYYY-MM-DDTHH:mm:ss'));
-        }
+        setJumlahDirigen(res.data.jumlahDirigen);
       })
       .catch((err) => console.log(err))
       .finally(() => {
@@ -106,6 +84,7 @@ function IsiDataPanen() {
       });
       
   }, []);
+
 
   const handleUploadGambar = (e) => {
     const file = e.target.files[0];
@@ -123,25 +102,15 @@ function IsiDataPanen() {
 
   const jsonToFd = async () => {
     const fd = new FormData();
-    
-    console.log(gambar);
-    console.log(tanggalPanen);
 
     fd.append('gambar', gambar);
-    fd.append('jenisMadu', jenisMadu);
-    fd.append('beratPanen', beratPanen);
-    fd.append('tanggalPanen', tanggalPanen);
-    fd.append('jumlahDrum', jumlahDrum);
-    fd.append('jumlahDirigen', jumlahDirigen);
+    fd.append('catatan', catatanWarehouse);
+    fd.append('beratBaru', beratWarehouse);
+    // fd.append('tanggalWarehouse', tanggalWarehouse);
+    fd.append('approve', true);
+    fd.append('idApprover', approver.id);
+    fd.append('namaApprover', approver.name);
 
-    if (role === "picLokasi"){
-      fd.append('idPetugasPanen', idPetugasPanen);
-      fd.append('namaPetugasPanen', namaPetugasPanen);
-    } else {
-      fd.append('idPetugasPanen', petugasPanen.id);
-      fd.append('namaPetugasPanen', petugasPanen.name);
-    }
-    
     console.log(fd);
     return fd;
   }
@@ -163,31 +132,15 @@ function IsiDataPanen() {
   const validateForm = () => {
     const newErrors = {};
 
-    if (beratPanen === 0 || beratPanen === null || beratPanen === undefined || beratPanen === '' || isNaN(beratPanen)) {
-      newErrors.beratPanen = "Berat Panen tidak boleh kosong";
-    } else if (beratPanen < 0) {
-      newErrors.beratPanen = 'Berat panen harus bilangan positif';
+    if (beratWarehouse === 0) {
+      newErrors.beratWarehouse = "Berat tidak boleh kosong";
+    } else if (isNaN(beratWarehouse) || beratWarehouse <= 0) {
+      newErrors.beratWarehouse = 'Berat harus bilangan positif';
     }
 
-    if (!jenisMadu) {
-      newErrors.jenisMadu = "Jenis Madu tidak boleh kosong";
-    }
-
-    if (!tanggalPanen.trim()) {
-      newErrors.tanggalPanen = "Tanggal Panen tidak boleh kosong";
-    }
-
-    if(jumlahDrum === null || jumlahDrum === undefined || jumlahDrum === '' || isNaN(jumlahDrum)){
-      setJumlahDrum(0);
-    } else if (jumlahDrum < 0) {
-      newErrors.jumlahDrum = 'Jumlah harus bilangan positif';
-    }
-
-    if (jumlahDirigen === null || jumlahDirigen === undefined || jumlahDirigen === '' || isNaN(jumlahDirigen)){
-      setJumlahDirigen(0);
-    } else if (jumlahDirigen < 0) {
-      newErrors.jumlahDirigen = 'Jumlah harus bilangan positif';
-    }
+    // if (!catatanWarehouse.trim()) {
+    //   newErrors.catatanWarehouse = "Catatan tidak boleh kosong";
+    // }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -198,9 +151,12 @@ function IsiDataPanen() {
     // setIsLoading(true);
 
     const fd = await jsonToFd();
+    console.log(beratWarehouse);
+    console.log(catatanWarehouse);
+    console.log(gambar);
 
     try {
-      const response = await axios.put(`${baseUrl}/panen/${id}/submit-lokasi`, fd, {
+      const response = await axios.put(`${baseUrl}/panen/${id}/approve-warehouse`, fd, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -222,7 +178,7 @@ function IsiDataPanen() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      
+
       <Toaster
         position="top-center"
         reverseOrder={false}
@@ -238,7 +194,7 @@ function IsiDataPanen() {
           <Grid item xs={12} lg={8}>
             <Card>
               <MDBox p={3}>
-                <MDTypography variant="h4" align="center">Data Panen</MDTypography>
+                <MDTypography variant="h4" align="center">Konfirmasi Warehouse</MDTypography>
               </MDBox>
               <MDBox pt={2} px={5}>
                 <Grid container spacing={3} justifyContent='center'>
@@ -280,10 +236,47 @@ function IsiDataPanen() {
                       </span>
                     </MDTypography>
                   </Grid>
+                  {/* Tanggal Panen */}
+                  <Grid item xs={12} md={9}>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Tanggal Panen&nbsp;
+                      :
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      {format(new Date(tanggalPanen), "dd-MM-yyyy")}
+                    </MDTypography>
+                  </Grid>
+                  
+                  {/* Berat Panen */}
+                  <Grid item xs={12} md={9}>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Berat Panen
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      :
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      {beratPanen} kg
+                    </MDTypography>
+                  </Grid>
+                  {/* Jumlah Drum */}
+                  <Grid item xs={12} md={9}>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Jumlah Drum
+                      &nbsp;&nbsp;&nbsp;
+                      :
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      {jumlahDrum}
+                    </MDTypography>
+                  </Grid>
+                  {/* Jumlah Jerigen */}
+                  <Grid item xs={12} md={9}>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Jumlah Jerigen&nbsp;
+                      :
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      {jumlahDirigen}
+                    </MDTypography>
+                  </Grid>
+
                   {/* Petugas Panen */}
                   <Grid item xs={12} md={9}>
                     {namaPetugasPanen ? (
-                      <MDTypography variant="subtitle2" fontWeight="regular">Petugas Lapangan&nbsp;:
+                      <MDTypography variant="subtitle2" fontWeight="regular">Petugas Lapangan
+                        &nbsp;&nbsp;:
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{namaPetugasPanen}
                       </MDTypography>
                     ):(
@@ -296,112 +289,73 @@ function IsiDataPanen() {
                   <Grid item xs={12} md={9}>
                     {namaPICPanen ? (
                       <MDTypography variant="subtitle2" fontWeight="regular">PIC Lapangan
-                      &nbsp;&nbsp;&nbsp;:
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{namaPICPanen}
+                        &nbsp;&nbsp;&nbsp;:
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{namaPICPanen}
                       </MDTypography>
                     ):(
                       <MDTypography variant="subtitle2" fontWeight="regular">PIC Lapangan
-                      &nbsp;&nbsp;&nbsp;:
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—
+                        &nbsp;&nbsp;&nbsp;:
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—
                       </MDTypography>
                     )}
                   </Grid>
-                  {/* Berat */}
+                  {/* Petugas Warehouse */}
+                  <Grid item xs={12} md={9}>
+                    {namaPetugasWarehouse ? (
+                      <MDTypography variant="subtitle2" fontWeight="regular">Petugas Warehouse&nbsp;:
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{namaPetugasWarehouse}
+                      </MDTypography>
+                    ):(
+                      <MDTypography variant="subtitle2" fontWeight="regular">Petugas Warehouse&nbsp;:
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—
+                      </MDTypography>
+                    )}
+                  </Grid>
+
+                  {/* Berat di warehouse */}
                   <Grid item xs={12} md={9} mt={2}>
                     <MDInput 
-                      disabled={status !== "SUBMITTED" && status !== "GENERATED"}
-                      error={errors.beratPanen}
-                      helperText={errors.beratPanen ? errors.beratPanen : ""}
-                      name="beratPanen"
+                      error={errors.beratWarehouse}
+                      helperText={errors.beratWarehouse ? errors.beratWarehouse : ""}
+                      name="beratWarehouse"
                       type="number"
-                      label="Berat (kg)" 
-                      // value={formData.beratPanen} 
-                      value={beratPanen}
-                      onChange={(e) => setBeratPanen(e.target.value)} 
+                      label="Berat di Warehouse (kg)" 
+                      value={beratWarehouse}
+                      onChange={(e) => setBeratWarehouse(e.target.value)} 
+                      disabled={status !== "PIC_APPROVED"}
                       fullWidth />
                   </Grid>
-                  {/* Jenis Madu */}
-                  <Grid item xs={12} md={9}>
-                    <StyledFormControl fullWidth>
-                      <InputLabel id="jenis-label">Jenis Madu</InputLabel>
-                      <Select
-                        disabled={status !== "SUBMITTED" && status !== "GENERATED"}
-                        error={errors.jenisMadu}
-                        labelId="jenis-label"
-                        name="jenisMadu"
-                        label="Jenis Madu"
-                        value={jenisMadu}
-                        onChange={(e) => setJenisMadu(e.target.value)} 
-                      >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={"A"}>Madu A</MenuItem>
-                        <MenuItem value={"B"}>Madu B</MenuItem>
-                        <MenuItem value={"C"}>Madu C</MenuItem>
-                        <MenuItem value={"D"}>Madu D</MenuItem>
-                        <MenuItem value={"E"}>Madu E</MenuItem>
-                      </Select>
-                      {errors.jenisMadu && (
-                        <StyledFormHelperText error>{errors.jenisMadu ? "Jenis Madu belum dipilih" : ""}</StyledFormHelperText>
-                      )}
-                    </StyledFormControl>
-                  </Grid>
-                  {/* Tanggal Panen */}
-                  <Grid item xs={12} md={9}>
-                  <FormControl fullWidth>
-                    <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
-                      <DatePicker 
-                        disabled={status !== "SUBMITTED" && status !== "GENERATED"}
-                        label="Tanggal Panen"
-                        name="tanggalPanen"
-                        // value={dayjs(formData.tanggalPanen)}
-                        value={dayjs(tanggalPanen)}
-                        onChange={(date) => setTanggalPanen(dayjs(date).format('YYYY-MM-DDTHH:mm:ss'))}
-                      />
-                    </LocalizationProvider>
-                  </FormControl>
-                  </Grid>
-                  {/* Jumlah Drum */}
+             
+                  {/* Catatan tambahan */}
                   <Grid item xs={12} md={9}>
                     <MDInput 
-                      error={errors.jumlahDrum}
-                      helperText={errors.jumlahDrum ? errors.jumlahDrum : ""}
-                      name="jumlahDrum"
-                      type="number"
-                      label="Jumlah Drum" 
-                      value={jumlahDrum} 
-                      onChange={(e) => setJumlahDrum(e.target.value)} 
-                      fullWidth />
-                  </Grid>
-                  {/* Jumlah Jerigen */}
-                  <Grid item xs={12} md={9}>
-                    <MDInput 
-                      error={errors.jumlahDirigen}
-                      helperText={errors.jumlahDirigen ? errors.jumlahDirigen : ""}
-                      name="jumlahDirigen"
-                      type="number"
-                      label="Jumlah Jerigen" 
-                      value={jumlahDirigen} 
-                      onChange={(e) => setJumlahDirigen(e.target.value)} 
+                      // error={errors.catatanTambahan}
+                      // helperText={errors.catatanTambahan ? "Catatan tidak boleh kosong" : ""}
+                      name="catatanWarehouse"
+                      label="Catatan tambahan" 
+                      value={catatanWarehouse} 
+                      onChange={(e) => setCatatanWarehouse(e.target.value)} 
+                      multiline
+                      rows={4} 
+                      disabled={status !== "PIC_APPROVED"}
                       fullWidth />
                   </Grid>
                   {/* Upload foto */}
                   <Grid item xs={12} md={9} display="grid">
-                    <MDTypography id="MDTypography" variant="caption" fontWeight="regular" mb={0.5}>Foto (max 1 MB)</MDTypography>
+                    <MDTypography variant="caption" fontWeight="regular">Foto</MDTypography>
                     <input 
-                      disabled={status !== "SUBMITTED" && status !== "GENERATED"}
+                      disabled={status !== "PIC_APPROVED"}
                       type="file"
                       accept="image/*"
                       name="gambarPanen"
                       onChange={handleUploadGambar}
                     />
                     {isUploadGambarBaru? (
-                      <MDBox style={{ maxWidth: '100%', marginTop: '40px' }} align="center" >
+                      <MDBox style={{ maxWidth: '100%', marginTop: '10px' }} align="center">
                         <img src={URL.createObjectURL(gambar)} style={{ width: '50%', height: 'auto', maxWidth: '100%' }} />
                       </MDBox>
                     ) : (
-                      <MDBox style={{ maxWidth: '100%' }} my={2} align="center">
+                      <MDBox style={{ maxWidth: '100%', marginTop: '10px' }} align="center">
                         <img src={gambar} style={{ width: '50%', height: 'auto', maxWidth: '100%' }} />
                       </MDBox>
                     )}
@@ -410,7 +364,14 @@ function IsiDataPanen() {
               </MDBox>
               <MDBox p={3} display="flex" justifyContent="center">
                 <MDButton variant="gradient" color="secondary" style={{ marginRight: '10px' }} onClick={handleButtonKembali}>Kembali</MDButton>
-                <MDButton type="submit" variant="gradient" color="primary" style={{ marginLeft: '10px' }} disabled={status !== "SUBMITTED" && status !== "GENERATED"}>Simpan</MDButton>
+                <MDButton 
+                  type="submit" 
+                  variant="gradient" 
+                  color="primary" 
+                  style={{ marginLeft: '10px' }}
+                  disabled={status !== "PIC_APPROVED"}
+                  >Simpan
+                </MDButton>
               </MDBox>
             </Card>
           </Grid>
@@ -452,10 +413,9 @@ function IsiDataPanen() {
         </Modal>
 
       </MDBox>
-      )
-    }
+    )}
     </DashboardLayout>
   );
 }
 
-export default IsiDataPanen;
+export default KonfirmasiWarehouse;
