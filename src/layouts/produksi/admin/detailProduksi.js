@@ -271,6 +271,55 @@ function DetailProduksi() {
                     <MDTypography variant="subtitle2" fontWeight="medium">{dataProduk?.listPanen.reduce((total, panen) => total + panen.berat, 0)} kg</MDTypography>
                   </Grid>
                 </Grid>
+              
+                {/* Jumlah Drum */}
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
+                  <Grid item xs={4} md={4} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Jumlah Drum</MDTypography>
+                  </Grid>
+                  <Grid item xs={1} md={1} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
+                  </Grid>
+                  <Grid item xs={7} md={7} mb={2}>
+                  {dataProduk?.jumlahDrum ? (
+                    <MDTypography variant="subtitle2" fontWeight="medium">{dataProduk?.jumlahDrum}</MDTypography>
+                  ):(
+                    <MDTypography variant="subtitle2" fontWeight="medium">0</MDTypography>
+                  )}
+                  </Grid>
+                </Grid>
+                {/* Jumlah Dirigen */}
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
+                  <Grid item xs={4} md={4} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Jumlah Jerigen</MDTypography>
+                  </Grid>
+                  <Grid item xs={1} md={1} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
+                  </Grid>
+                  <Grid item xs={7} md={7} mb={2}>
+                  {dataProduk?.jumlahDirigen ? (
+                    <MDTypography variant="subtitle2" fontWeight="medium">{dataProduk?.jumlahDirigen}</MDTypography>
+                  ):(
+                    <MDTypography variant="subtitle2" fontWeight="medium">0</MDTypography>
+                  )}
+                  </Grid>
+                </Grid>
+                {/* Jumlah Tangki */}
+                <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
+                  <Grid item xs={4} md={4} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Jumlah Tangki</MDTypography>
+                  </Grid>
+                  <Grid item xs={1} md={1} mb={2}>
+                    <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>
+                  </Grid>
+                  <Grid item xs={7} md={7} mb={2}>
+                  {dataProduk?.jumlahTangki ? (
+                    <MDTypography variant="subtitle2" fontWeight="medium">{dataProduk?.jumlahTangki}</MDTypography>
+                  ):(
+                    <MDTypography variant="subtitle2" fontWeight="medium">0</MDTypography>
+                  )}
+                  </Grid>
+                </Grid>
                 
                 {/* Komposisi Madu */}
                 <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
@@ -392,7 +441,7 @@ function DetailProduksi() {
             >
               <MDBox display="flex" alignItems="center" justifyContent="space-between" p={2}>
                 <MDTypography variant="h5">Konfirmasi</MDTypography>
-                <Icon fontSize="medium" sx={{ cursor: "pointer" }} onClick={toggleModalKonfirmasi}>close</Icon> 
+                <Icon fontSize="medium" sx={{ cursor: "pointer" }} onClick={toggleModalHapus}>close</Icon> 
               </MDBox>
               <Divider sx={{ my: 0 }} />
               <MDBox p={2} my={3}>
@@ -402,11 +451,11 @@ function DetailProduksi() {
               </MDBox>
               <Divider sx={{ my: 0 }} />
               <MDBox display="flex" justifyContent="space-between" p={1.5}>
-                <MDButton variant="gradient" color="secondary" onClick={toggleModalKonfirmasi}>
+                <MDButton variant="gradient" color="secondary" onClick={toggleModalHapus}>
                   Batal
                 </MDButton>
-                <MDButton variant="gradient" color="info" onClick={confirmHapus}>
-                  Konfirmasi
+                <MDButton variant="gradient" color="error" onClick={confirmHapus}>
+                  Hapus
                 </MDButton>
   
               </MDBox>

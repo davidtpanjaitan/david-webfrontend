@@ -149,7 +149,7 @@ export default function ListUserTable(){
 
     const filtered = listUser.filter((user) => {
       const isNameMatch = user.name.toLowerCase().includes(trimmedSearch);
-      const isIdMatch = user.id.toLowerCase().includes(trimmedSearch);
+      const isIdMatch = user.employeeId.toLowerCase().includes(trimmedSearch);
       const isUsernameMatch = user.username.toLowerCase().includes(trimmedSearch);
 
       let isRoleMatch = false;
@@ -158,7 +158,11 @@ export default function ListUserTable(){
         isRoleMatch = true;
       } else if (user.role === "picLokasi" && "pic lapangan".includes(trimmedSearch)) {
         isRoleMatch = true;
-      } 
+      } else if (user.role === "petugasWarehouse" && "petugas warehouse".includes(trimmedSearch)) {
+        isRoleMatch = true;
+      } else if (user.role === "petugasProduksi" && "petugas produksi".includes(trimmedSearch)) {
+        isRoleMatch = true;
+      }
 
       return isNameMatch || isRoleMatch || isIdMatch || isUsernameMatch;
     });

@@ -21,7 +21,7 @@ import ProtectedRoute from './ProtectedRoute';
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "./context";
 
 // Images
-import logo from "./assets/images/logo-sgi.png";
+import logo from "./assets/images/sgi_logo.png";
 
 // Page Login
 import Login from "./layouts/auth/Login";

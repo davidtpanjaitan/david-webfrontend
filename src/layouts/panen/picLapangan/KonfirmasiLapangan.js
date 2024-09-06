@@ -218,7 +218,7 @@ function KonfirmasiLapangan() {
                   </Grid>
                   {/* Petugas Panen */}
                   <Grid item xs={12} md={9}>
-                    {namaPetugasPanen ? (
+                    {namaPetugasPanen && namaPetugasPanen===null ? (
                       <MDTypography variant="subtitle2" fontWeight="regular">Petugas Lapangan&nbsp;:
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{namaPetugasPanen}
                       </MDTypography>
@@ -270,11 +270,15 @@ function KonfirmasiLapangan() {
                         <MenuItem value="">
                           <em>None</em>
                         </MenuItem>
-                        <MenuItem value={"A"}>Madu A</MenuItem>
-                        <MenuItem value={"B"}>Madu B</MenuItem>
-                        <MenuItem value={"C"}>Madu C</MenuItem>
-                        <MenuItem value={"D"}>Madu D</MenuItem>
-                        <MenuItem value={"E"}>Madu E</MenuItem>
+                        <MenuItem value={"Madu Karet"}>Madu Karet</MenuItem>
+                        <MenuItem value={"Madu Akasia"}>Madu Akasia</MenuItem>
+                        <MenuItem value={"Madu Randu"}>Madu Randu</MenuItem>
+                        <MenuItem value={"Madu Ekaliptus"}>Madu Ekaliptus</MenuItem>
+                        <MenuItem value={"Madu Hutan Akasia"}>Madu Hutan Akasia</MenuItem>
+                        <MenuItem value={"Madu Hutan Akasia"}>Madu Hutan Organik</MenuItem>
+                        <MenuItem value={"Madu Hutan Akasia"}>Madu Rambutan</MenuItem>
+                        <MenuItem value={"Madu Hutan Akasia"}>Madu Multiflora</MenuItem>
+                        <MenuItem value={"Madu Hutan Akasia"}>Madu Kopi</MenuItem>
                       </StyledSelect>
                     </FormControl>
                   </Grid>
@@ -328,7 +332,12 @@ function KonfirmasiLapangan() {
               </MDBox>
               <MDBox p={3} display="flex" justifyContent="center">
                 <MDButton variant="gradient" color="secondary" style={{ marginRight: '10px' }} onClick={handleButtonKembali}>Kembali</MDButton>
-                <MDButton variant="gradient" color="warning" style={{ width: '100px' }} onClick={handleButtonUbah}>Ubah</MDButton>
+                <MDButton 
+                  disabled={status !== "SUBMITTED" && status!== "GENERATED"}
+                  variant="gradient" 
+                  color="warning" 
+                  style={{ width: '120px' }} 
+                  onClick={handleButtonUbah}>Ubah Data</MDButton>
                 <MDButton 
                   disabled={status !== "SUBMITTED"} 
                   type="submit" 

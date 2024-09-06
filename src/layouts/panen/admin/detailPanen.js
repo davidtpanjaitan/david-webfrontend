@@ -411,7 +411,6 @@ function DetailPanen() {
                 </Grid>
 
                 {/* Berat Sisa */}
-                {/*
                 <Grid container spacing={3} align="left" ml={2}>
                   <Grid item xs={4} md={4} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="regular">Berat Sisa</MDTypography>
@@ -427,7 +426,7 @@ function DetailPanen() {
                   )}
                   </Grid>
                 </Grid>
-                */}
+                
                 
                   <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                     {dataPanen?.gambarPanenUrl && (
@@ -535,8 +534,8 @@ function DetailPanen() {
                 <MDButton variant="gradient" color="secondary" onClick={toggleModalHapus}>
                   Batal
                 </MDButton>
-                <MDButton variant="gradient" color="info" onClick={confirmHapus}>
-                  Konfirmasi
+                <MDButton variant="gradient" color="error" onClick={confirmHapus}>
+                  Hapus
                 </MDButton>
   
               </MDBox>

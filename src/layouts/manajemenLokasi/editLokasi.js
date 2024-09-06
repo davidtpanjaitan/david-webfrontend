@@ -178,9 +178,9 @@ function EditLokasi() {
                   <Grid item xs={12} md={9}>
                     <MDInput 
                       error={errors.namaPetani}
-                      helperText={errors.namaPetani ? "Nama petani tidak boleh kosong" : ""}
+                      helperText={errors.namaPetani ? "Nama penanggung jawab tidak boleh kosong" : ""}
                       name="namaPetani"
-                      label="Nama Petani" 
+                      label="Nama Penanggung Jawab" 
                       value={formData.namaPetani} 
                       onChange={handleChange} 
                       fullWidth />

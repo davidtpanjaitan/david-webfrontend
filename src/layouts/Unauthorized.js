@@ -19,7 +19,6 @@ import PageLayout from "../examples/LayoutContainers/PageLayout";
 // import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 
 function Unauthorized() {
-    const baseUrl = "https://david-test-webapp.azurewebsites.net/api";
     const navigate = useNavigate();
 
     const handleButtonKembali = () => {
@@ -28,13 +27,19 @@ function Unauthorized() {
 
     return (
       <PageLayout>
-        <MDBox>
-          <MDTypography variant="h1">
-            Anda tidak memiliki akses ke halaman ini
-          </MDTypography>
-          <MDButton onClick={handleButtonKembali}>
-            Kembali
-          </MDButton>
+        <MDBox py={3} sx={{ height: '70vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={12} lg={12} align="center">
+              <MDTypography variant="h3">
+                Anda tidak memiliki akses ke halaman ini
+              </MDTypography>
+            </Grid>
+            <Grid item xs={12} md={12} lg={12} align="center">
+              <MDButton variant="gradient" color="secondary" onClick={handleButtonKembali}>
+                Kembali
+              </MDButton>
+            </Grid>
+          </Grid>
         </MDBox>
       </PageLayout>
     );

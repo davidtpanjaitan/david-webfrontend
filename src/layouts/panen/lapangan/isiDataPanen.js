@@ -163,8 +163,8 @@ function IsiDataPanen() {
   const validateForm = () => {
     const newErrors = {};
 
-    if (beratPanen === 0 || beratPanen === null || beratPanen === undefined || beratPanen === '' || isNaN(beratPanen)) {
-      newErrors.beratPanen = "Berat Panen tidak boleh kosong";
+    if (beratPanen === null || beratPanen === undefined || beratPanen === '' || isNaN(beratPanen)) {
+      setBeratPanen(0);
     } else if (beratPanen < 0) {
       newErrors.beratPanen = 'Berat panen harus bilangan positif';
     }
@@ -336,11 +336,15 @@ function IsiDataPanen() {
                         <MenuItem value="">
                           <em>None</em>
                         </MenuItem>
-                        <MenuItem value={"A"}>Madu A</MenuItem>
-                        <MenuItem value={"B"}>Madu B</MenuItem>
-                        <MenuItem value={"C"}>Madu C</MenuItem>
-                        <MenuItem value={"D"}>Madu D</MenuItem>
-                        <MenuItem value={"E"}>Madu E</MenuItem>
+                        <MenuItem value={"Madu Karet"}>Madu Karet</MenuItem>
+                        <MenuItem value={"Madu Akasia"}>Madu Akasia</MenuItem>
+                        <MenuItem value={"Madu Randu"}>Madu Randu</MenuItem>
+                        <MenuItem value={"Madu Ekaliptus"}>Madu Ekaliptus</MenuItem>
+                        <MenuItem value={"Madu Hutan Akasia"}>Madu Hutan Akasia</MenuItem>
+                        <MenuItem value={"Madu Hutan Akasia"}>Madu Hutan Organik</MenuItem>
+                        <MenuItem value={"Madu Hutan Akasia"}>Madu Rambutan</MenuItem>
+                        <MenuItem value={"Madu Hutan Akasia"}>Madu Multiflora</MenuItem>
+                        <MenuItem value={"Madu Hutan Akasia"}>Madu Kopi</MenuItem>
                       </Select>
                       {errors.jenisMadu && (
                         <StyledFormHelperText error>{errors.jenisMadu ? "Jenis Madu belum dipilih" : ""}</StyledFormHelperText>

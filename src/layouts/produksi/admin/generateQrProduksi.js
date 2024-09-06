@@ -177,7 +177,7 @@ function GenerateQrProduksi() {
               <Divider sx={{ my: 0 }} />
               <MDBox p={2} my={3}>
                 <MDTypography variant="body2" color="secondary" fontWeight="regular" align="center">
-                  Apakah Anda yakin untuk menyimpan user baru?
+                  Apakah Anda yakin untuk membuat QR Produk?
                 </MDTypography>
               </MDBox>
               <Divider sx={{ my: 0 }} />
@@ -186,7 +186,7 @@ function GenerateQrProduksi() {
                   Batal
                 </MDButton>
                 <MDButton variant="gradient" color="info" onClick={confirmSubmit}>
-                  Simpan 
+                  Yakin 
                 </MDButton>
               </MDBox>
             </MDBox>
@@ -194,7 +194,6 @@ function GenerateQrProduksi() {
         </Modal>
 
       </MDBox>
-      {/* <Footer /> */}
     </DashboardLayout>
   );
 }

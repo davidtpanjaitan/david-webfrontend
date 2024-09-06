@@ -90,7 +90,7 @@ function AddUser() {
     }
 
     if (!formData.username.trim()) {
-      newErrors.username = "Nama petani tidak boleh kosong";
+      newErrors.username = "Username tidak boleh kosong";
     }
 
     console.log(formData.role);
@@ -103,7 +103,7 @@ function AddUser() {
     }
 
     if (!formData.password.trim()) {
-      newErrors.password = "Lokasi lengkap tidak boleh kosong";
+      newErrors.password = "Password tidak boleh kosong";
     }
 
     setErrors(newErrors);

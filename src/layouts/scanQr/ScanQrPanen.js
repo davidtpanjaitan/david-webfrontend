@@ -127,7 +127,7 @@ function ScanQrPanen() {
                     <MDBox align="center" mt={5} mb={2}>
                       <Grid container spacing={3} align='center'>
                         <Grid item xs={12} md={12}>
-                          <MDButton variant="gradient" color="primary" onClick={() => setScanning(true)}>Start</MDButton>
+                          <MDButton variant="gradient" color="primary" onClick={() => setScanning(true)}>Scan With Camera</MDButton>
                         </Grid>
                         <Grid item xs={12} md={12}>
                           <MDButton 
@@ -173,7 +173,7 @@ function ScanQrPanen() {
                           />
                         </Grid>
                         <Grid item xs={12} md={12} mb={2}>
-                          <MDButton variant="gradient" color="error" onClick={() => setScanning(false)}>Stop</MDButton>
+                          <MDButton variant="gradient" color="error" onClick={() => setScanning(false)}>Stop Camera</MDButton>
                         </Grid>
                       </Grid>
                     </MDBox>

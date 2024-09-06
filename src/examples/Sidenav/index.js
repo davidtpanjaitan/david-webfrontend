@@ -30,7 +30,7 @@ import Icon from "@mui/material/Icon";
 // Material Dashboard 2 React components
 import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
-import MDButton from "../../components/MDButton";
+import MDBadge from "../../components/MDBadge";
 
 // Material Dashboard 2 React example components
 import SidenavCollapse from "./SidenavCollapse";
@@ -56,6 +56,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const collapseName = location.pathname.replace("/", "");
   const auth = useAuth();
   const user = JSON.parse(localStorage.getItem("user"));
+  const role = localStorage.getItem("role");
 
   let textColor = "white";
 
@@ -184,6 +185,49 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           (darkMode && !transparentSidenav && whiteSidenav)
         }
       />
+      <MDBox align="center" mb={1}>
+      { role === "admin" &&
+        <MDBadge 
+          badgeContent={"Halo, Admin!"} 
+          color="light" 
+          variant="contained" 
+          size="lg" 
+          alignItems="center" />
+      }
+      { role === "petugasLokasi" &&
+        <MDBadge 
+          badgeContent={"Halo, Petugas Lapangan!"} 
+          color="light" 
+          variant="contained" 
+          size="lg" 
+          alignItems="center" />
+      }
+      { role === "picLokasi" &&
+        <MDBadge 
+          badgeContent={"Halo, PIC Lapangan!"} 
+          color="light" 
+          variant="contained" 
+          size="lg" 
+          alignItems="center" />
+      }
+      { role === "petugasWarehouse" &&
+        <MDBadge 
+          badgeContent={"Halo, Petugas Warehouse!"} 
+          color="light" 
+          variant="contained" 
+          size="lg" 
+          alignItems="center" />
+      }
+      { role === "petugasProduksi" &&
+        <MDBadge 
+          badgeContent={"Halo, Petugas Produksi!"} 
+          color="light" 
+          variant="contained" 
+          size="lg" 
+          alignItems="center" />
+      }
+      </MDBox>
+      
       <List>{renderRoutes}</List>
       <Divider
         light={

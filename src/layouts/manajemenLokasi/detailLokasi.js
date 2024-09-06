@@ -119,7 +119,7 @@ function DetailLokasi() {
                 {/* Nama Petani */}
                 <Grid container spacing={3} align="left" sx={{ ml: { sm: 2 }}}>
                   <Grid item xs={4} md={4} mb={2}>
-                    <MDTypography variant="subtitle2" fontWeight="regular">Nama Petani</MDTypography>
+                    <MDTypography variant="subtitle2" fontWeight="regular">Nama Penanggung Jawab</MDTypography>
                   </Grid>
                   <Grid item xs={1} md={1} mb={2}>
                     <MDTypography variant="subtitle2" fontWeight="medium">:</MDTypography>

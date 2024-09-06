@@ -42,7 +42,7 @@ export default function ListLokasiTable(){
       },
     },
     { name: 'namaPetani', 
-      label: 'Nama Petani',
+      label: 'Nama Penanggung Jawab',
       options: {
         customBodyRender: (value) => {
           return (

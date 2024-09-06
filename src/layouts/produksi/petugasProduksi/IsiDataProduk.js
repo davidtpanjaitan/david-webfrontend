@@ -59,6 +59,9 @@ function IsiDataProduk() {
   const toggleModal = () => setShowModal(!showModal);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [jumlahDrum, setJumlahDrum] = useState('');
+  const [jumlahDirigen, setJumlahDirigen] = useState('');
+  const [jumlahTangki, setJumlahTangki] = useState('');
 
   const [tanggal,setTanggal] = useState('');
   const [nama, setNama] = useState('');
@@ -96,6 +99,9 @@ function IsiDataProduk() {
         setNamaPetugasMixing(res.data.namaPetugasMixing);
         setStatus(res.data.status);
         setListPanen(res.data.listPanen);
+        setJumlahDirigen(res.data.jumlahDirigen);
+        setJumlahDrum(res.data.jumlahDrum);
+        setJumlahTangki(res.data.jumlahTangki);
 
         if (res.data.tanggal){
           setTanggal(dayjs(res.data.tanggal).format('YYYY-MM-DDTHH:mm:ss'));
@@ -194,8 +200,26 @@ function IsiDataProduk() {
     } else {
       const hasZeroWeight = listPanen.some(panen => panen.berat === 0 || panen.berat === null || panen.berat === undefined || panen.berat === '' || isNaN(panen.berat));
       if (hasZeroWeight) {
-      newErrors.listPanen = "Berat panen tidak boleh kosong";
+        newErrors.listPanen = "Berat panen tidak boleh kosong";
+      }
     }
+
+    if(jumlahDrum === null || jumlahDrum === undefined || jumlahDrum === '' || isNaN(jumlahDrum)){
+      setJumlahDrum(0);
+    } else if (jumlahDrum < 0) {
+      newErrors.jumlahDrum = 'Jumlah harus bilangan positif';
+    }
+
+    if (jumlahDirigen === null || jumlahDirigen === undefined || jumlahDirigen === '' || isNaN(jumlahDirigen)){
+      setJumlahDirigen(0);
+    } else if (jumlahDirigen < 0) {
+      newErrors.jumlahDirigen = 'Jumlah harus bilangan positif';
+    }
+
+    if (jumlahTangki === null || jumlahTangki === undefined || jumlahTangki === '' || isNaN(jumlahTangki)){
+      setJumlahTangki(0);
+    } else if (jumlahTangki < 0) {
+      newErrors.jumlahTangki = 'Jumlah harus bilangan positif';
     }
 
     setErrors(newErrors);
@@ -221,6 +245,9 @@ function IsiDataProduk() {
         namaPetugasMixing: petugasMixing.name,
         tanggal,
         listPanen,
+        jumlahDirigen,
+        jumlahDrum,
+        jumlahTangki,
       });
       console.log("Data produk berhasil disimpan:", response.data);
       navigate('/');
@@ -297,7 +324,7 @@ function IsiDataProduk() {
                   {/* Nama Produk */}
                   <Grid item xs={12} md={9} mt={2}>
                     <MDInput 
-                      // disabled={status === "PIC_APPROVED"}
+                      disabled={status === "ADMIN_APPROVED"}
                       error={errors.nama}
                       helperText={errors.nama ? errors.nama : ""}
                       name="nama"
@@ -313,7 +340,7 @@ function IsiDataProduk() {
                   <FormControl fullWidth>
                     <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
                       <DatePicker 
-                        disabled={status === "PIC_APPROVED"}
+                        disabled={status === "ADMIN_APPROVED"}
                         label="Tanggal Diajukan"
                         name="tanggal"
                         // value={dayjs(formData.tanggalPanen)}
@@ -322,6 +349,46 @@ function IsiDataProduk() {
                       />
                     </LocalizationProvider>
                   </FormControl>
+                  </Grid>
+
+                  {/* Jumlah Drum */}
+                  <Grid item xs={12} md={9}>
+                    <MDInput 
+                      disabled={status === "ADMIN_APPROVED"}
+                      error={errors.jumlahDrum}
+                      helperText={errors.jumlahDrum ? errors.jumlahDrum : ""}
+                      name="jumlahDrum"
+                      type="number"
+                      label="Jumlah Drum" 
+                      value={jumlahDrum} 
+                      onChange={(e) => setJumlahDrum(e.target.value)} 
+                      fullWidth />
+                  </Grid>
+                  {/* Jumlah Jerigen */}
+                  <Grid item xs={12} md={9}>
+                    <MDInput 
+                      disabled={status === "ADMIN_APPROVED"}
+                      error={errors.jumlahDirigen}
+                      helperText={errors.jumlahDirigen ? errors.jumlahDirigen : ""}
+                      name="jumlahDirigen"
+                      type="number"
+                      label="Jumlah Jerigen" 
+                      value={jumlahDirigen} 
+                      onChange={(e) => setJumlahDirigen(e.target.value)} 
+                      fullWidth />
+                  </Grid>
+                  {/* Jumlah Tangki */}
+                  <Grid item xs={12} md={9}>
+                    <MDInput 
+                      error={errors.jumlahTangki}
+                      disabled={status === "ADMIN_APPROVED"}
+                      helperText={errors.jumlahTangki ? errors.jumlahTangki : ""}
+                      name="jumlahTangki"
+                      type="number"
+                      label="Jumlah Tangki" 
+                      value={jumlahTangki} 
+                      onChange={(e) => setJumlahTangki(e.target.value)} 
+                      fullWidth />
                   </Grid>
 
                   {/* Tabel Komposisi Madu */}
@@ -355,11 +422,12 @@ function IsiDataProduk() {
                                 <MDTypography variant="subtitle2" fontWeight="regular">{panen.id}</MDTypography>
                               </TableCell>
                               <TableCell align="center">
-                                <MDTypography variant="subtitle2" fontWeight="regular">Madu {panen.jenisMadu}</MDTypography>
+                                <MDTypography variant="subtitle2" fontWeight="regular">{panen.jenisMadu}</MDTypography>
                               </TableCell>
                               <TableCell align="center">
                                   <MDInput
                                     fullWidth
+                                    disabled={status === "ADMIN_APPROVED"}
                                     label="Berat(kg)"
                                     inputProps={{ style: { maxWidth: '100%' } }}
                                     value={panen.berat || ''}
@@ -368,9 +436,14 @@ function IsiDataProduk() {
                                   
                               </TableCell>
                               <TableCell>
-                                <IconButton size="small" aria-label="delete" color="error" onClick={() => handleButtonDeletePanen(panen.id)}>
+                                <IconButton 
+                                  disabled={status === "ADMIN_APPROVED"}
+                                  size="small" 
+                                  aria-label="delete" 
+                                  color="error" 
+                                  onClick={() => handleButtonDeletePanen(panen.id)}>
                                     <Icon fontSize="small">delete</Icon>
-                                  </IconButton>
+                                </IconButton>
                               </TableCell>
                             </TableRow>
                           ))}
@@ -383,7 +456,7 @@ function IsiDataProduk() {
                   </Grid>
                   {/* Tombol Scan QR */}
                   <Grid item xs={12} md={9} align="right">
-                    <MDButton variant="gradient" color="secondary" onClick={toggleQRScanner}>
+                    <MDButton variant="gradient" color="secondary" onClick={toggleQRScanner} disabled={status === "ADMIN_APPROVED"}>
                       + Scan QR
                     </MDButton>
                   </Grid>
@@ -392,7 +465,7 @@ function IsiDataProduk() {
               </MDBox>
               <MDBox p={3} display="flex" justifyContent="center">
                 <MDButton variant="gradient" color="secondary" style={{ marginRight: '10px' }} onClick={handleButtonKembali}>Kembali</MDButton>
-                <MDButton type="submit" variant="gradient" color="primary" style={{ marginLeft: '10px' }}>Simpan</MDButton>
+                <MDButton disabled={status === "ADMIN_APPROVED"} type="submit" variant="gradient" color="primary" style={{ marginLeft: '10px' }}>Simpan</MDButton>
               </MDBox>
             </Card>
           </Grid>
